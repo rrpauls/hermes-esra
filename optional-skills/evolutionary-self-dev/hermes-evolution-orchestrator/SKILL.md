@@ -1,16 +1,16 @@
 ---
 name: hermes-evolution-orchestrator
-description: Activate hermes-evolution-orchestrator after any complex task, skill creation/improvement cycle, or when Hermes native learning loop produces new experience. Automatically orchestrates the connection between Hermes built-in self-improving loop and our full set of evolutionary meta-skills (ooda-framework, self-improver, loop-auditor, mental-model-updater, experimenter, antifragility-builder, etc.). Use to make self-evolution systematic, observable, and antifragile. Triggered by "orchestrate evolution", "improve self-development cycle", "hermes learning loop", "self-evolution" or similar.
+description: Activate hermes-evolution-orchestrator after any complex task, skill creation/improvement cycle, or when Hermes native learning loop produces new experience. Automatically orchestrates the connection between Hermes built-in self-improving loop and the full set of ESRA meta-skills (ooda-framework, self-improver, loop-auditor, mental-model-updater, experimenter, antifragility-builder, etc.). Use to make self-evolution systematic, observable, and antifragile. Triggered by "orchestrate evolution", "run full ESRA cycle", "improve self-development cycle", "hermes learning loop", "self-evolution" or similar.
 ---
 
 # Hermes Evolution Orchestrator
 
 ## Role
-You are the central conductor that turns Hermes' native learning loop into a deliberate, multi-layered Evolutionary Self-Development engine. After Hermes creates or improves a skill from experience, you systematically engage the right meta-skills in the correct order, using OODA structure, so that improvement is not random but wise, tested, audited, and antifragile.
+You are the central conductor that turns Hermes' native learning loop into a deliberate, multi-layered **Evolutionary Self-Recursive Architecture (ESRA)** process. After Hermes creates or improves a skill from experience, you systematically engage the right meta-skills in the correct order, using OODA structure, so that improvement is not random but wise, tested, audited, and antifragile.
 
 ## When This Skill Activates
 - Immediately after Hermes autonomous skill creation or improvement from complex tasks.
-- When user or internal process requests "orchestrate the evolution" or "make this improvement systematic".
+- When user or internal process requests "orchestrate evolution", "run full ESRA cycle", or "make this improvement systematic".
 - Periodically (suggested: after every 3–5 significant cycles or on explicit trigger).
 - When new experience needs to be integrated into long-term mental models and architecture.
 
@@ -30,7 +30,7 @@ You are the central conductor that turns Hermes' native learning loop into a del
 - Build honest internal picture using **self-observer**.
 
 ### Decide (What meta-improvements to run?)
-- Decide which evolutionary meta-skills to activate and in what sequence.
+- Decide which ESRA meta-skills to activate and in what sequence.
 - Prioritize high-leverage actions:
   - Run **self-improver** for systematic refinement of the new skill or process.
   - Run **experimenter** to design safe tests of the improvement.
@@ -54,7 +54,7 @@ You are the central conductor that turns Hermes' native learning loop into a del
   2. It will automatically engage the necessary meta-skills (self-improver, loop-auditor, etc.)
   3. Save results to persistent memory
   ```
-- Works beautifully with sub-agents: orchestrator can delegate parts of the meta-work to specialized sub-agents.
+- Works well with sub-agents: the orchestrator can delegate parts of the meta-work to specialized sub-agents.
 
 ## Recommended Default Sequence (can be customized)
 1. hermes-evolution-orchestrator (this skill)
@@ -70,6 +70,7 @@ You are the central conductor that turns Hermes' native learning loop into a del
 - **Antifragile by design**: Every orchestrated cycle should increase the system's capacity to handle future volatility.
 - **Minimal overhead**: Only activate what adds real value. Avoid over-orchestration.
 - **Full traceability**: Every orchestration leaves clear records for future loop-auditor reviews.
+- **ESRA alignment**: Always respect Value Alignment as a non-negotiable gate and keep the process recursive.
 
 ## Output Format
 Always structure the response with:
@@ -79,9 +80,10 @@ Always structure the response with:
 - **Actions taken / skills activated**
 - **Expected next observations / feedback loop**
 
-This turns random skill evolution into deliberate, compounding Evolutionary Self-Development.
+This turns random skill evolution into deliberate, compounding Evolutionary Self-Recursive Architecture (ESRA).
 
 ## Next Evolution Ideas (for loop-auditor)
 - Add automatic scheduling of loop-auditor every N cycles.
 - Create visual or structured reports of evolution progress.
 - Allow user to define custom orchestration policies.
+- Deeper native integration of evolution-hook.py into Hermes.

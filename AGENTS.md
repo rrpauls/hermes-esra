@@ -1,44 +1,52 @@
-# AGENTS.md — Evolutionary Self-Development Integration for Hermes
+# AGENTS.md — ESRA Integration for Hermes
 
-> **Goal:** Make Hermes self-development systematic, deep, and automatic by connecting the native learning loop with a powerful meta-layer.
+> **Goal:** Make Hermes self-development systematic, value-aligned, observable, and compounding by connecting its native learning loop with the Evolutionary Self-Recursive Architecture (ESRA) meta-layer.
+
+**Official architecture name:** ESRA — Evolutionary Self-Recursive Architecture  
+**Specification repository:** https://github.com/rrpauls/esra  
+**This repository:** Concrete Hermes implementation of ESRA
+
+---
 
 ## Core Rule
 
-**After any complex task** or when Hermes autonomously creates/improves a skill from experience — **always run** `hermes-evolution-orchestrator`.
+**After any complex task**, skill creation, or significant improvement — **always run** `hermes-evolution-orchestrator`  
+(or explicitly say: `orchestrate evolution` / `run full ESRA cycle`).
 
-This turns random improvements into a deliberate, auditable, and compounding evolution process.
+This turns ad-hoc improvements into a deliberate, auditable, and self-improving evolutionary process.
 
 ---
 
 ## How to Run the Orchestrator
 
-### Recommended Triggers (copy and use)
+### Recommended Triggers
 
 ```text
 After this task, run hermes-evolution-orchestrator
 
 orchestrate evolution
 
+run full ESRA cycle
+
 improve the self-development cycle
 
 perform evolutionary audit of this task
-
-after completing a complex task, run the orchestrator and related meta-skills
 ```
 
 ### Smart Triggering via `evolution-hook.py`
 
-There is a helper tool `tools/evolution-hook.py` that can analyze task context and evolution history to make smarter decisions about when to launch the orchestrator.
+The helper tool `tools/evolution-hook.py` analyzes task context and evolution history to decide when to launch the orchestrator.
 
-**Key capabilities:**
+**Capabilities:**
 - Considers task complexity, new skill creation, and result confidence
-- Includes rate limiting (prevents running the orchestrator too frequently)
-- Analyzes patterns in history (e.g., repeated improvements in the same area)
-- Can be used as a reference for future native integration into Hermes
+- Includes rate limiting
+- Analyzes historical patterns
+- Can serve as a reference for future native Hermes integration
 
-**Current usage:**
-- Run manually when needed: `python tools/evolution-hook.py`
-- Use its output as guidance before running `hermes-evolution-orchestrator`
+**Usage:**
+```bash
+python tools/evolution-hook.py
+```
 
 ---
 
@@ -50,60 +58,63 @@ Every **5–10 significant cycles** or after major changes, explicitly run:
 Run loop-auditor to audit the current evolutionary cycle
 ```
 
-(Use the updated version of `loop-auditor`, which is specifically adapted for Hermes + `hermes-evolution-orchestrator`).
-
 ---
 
-## Installed Evolutionary Self-Development Skills
+## Installed ESRA Meta-Skills
 
-All skills are located in:
-`~/.hermes/skills/evolutionary-self-dev/`
+All skills live in: `~/.hermes/skills/evolutionary-self-dev/`
 
 | Skill | Purpose |
 |-------|---------|
-| `hermes-evolution-orchestrator` | Central conductor of evolution |
-| `evolution-hook.py` (in `tools/`) | Smart detector + history and pattern analysis for triggering the orchestrator |
-| `ooda-framework` | Structures decisions and improvements using Observe → Orient → Decide → Act |
+| `hermes-evolution-orchestrator` | Central conductor of the ESRA loop |
+| `evolution-hook.py` (tools/) | Smart detector + history analysis for triggering |
+| `ooda-framework` | Structures work using Observe → Orient → Decide → Act |
+| `self-observer` | Honest monitoring of internal state and patterns |
 | `self-improver` | Systematic improvement of skills and processes |
-| `loop-auditor` | Meta-audit of the entire evolutionary cycle |
-| `mental-model-updater` | Updating mental models |
-| `experimenter` | Safe experiments for improvement |
-| `antifragility-builder` | Strengthening the system through uncertainty |
-| `hermes-codebase-engineer` | Programming and integration work in Hermes |
+| `value-clarifier` | Value alignment checks (mandatory before experiments) |
+| `experimenter` | Design and run safe improvement experiments |
+| `mental-model-updater` | Integrate results into long-term models |
+| `antifragility-builder` | Grow stronger from stress and uncertainty |
+| `loop-auditor` | Meta-audit of the entire evolutionary process |
+| `optimizer-philosopher` | Deep trade-off and meaning analysis |
+| `system-dynamics-thinker` | Feedback loops, stocks & flows, leverage points |
+| `crisis-manager` | High-stakes decision making under uncertainty |
+| `hermes-codebase-engineer` | Programming and integration work inside Hermes |
 
 ---
 
-## How to Install All Skills
+## Installation
 
-Run in the root of the fork:
+From the root of this repository:
 
 ```bash
+chmod +x install-evolutionary-skills.sh
 ./install-evolutionary-skills.sh
 ```
 
-The script will automatically copy all skills to `~/.hermes/skills/evolutionary-self-dev/` and `AGENTS.md` to `~/.hermes/AGENTS.md`.
+This copies all skills to `~/.hermes/skills/evolutionary-self-dev/` and places `AGENTS.md` into `~/.hermes/`.
 
 ---
 
 ## Philosophy
 
 - Hermes provides a powerful **engine** for self-improvement.
-- The Evolutionary Self-Development layer provides the **steering wheel, brakes, and navigation system**.
+- ESRA provides the **steering, brakes, navigation, and audit system**.
 - `hermes-evolution-orchestrator` is the mechanism that connects them.
 
-The goal is not just to add skills, but to make the evolution process itself **self-improving**.
+The goal is not merely to add skills, but to make the evolution process itself **recursive and self-improving**.
 
 ---
 
-## Future Development Directions (for loop-auditor)
+## Relationship to the ESRA Specification
 
-- Automatic triggering of the orchestrator after Hermes creates skills
-- Visual/structured reports on evolution progress
-- Custom orchestration policies
-- Deeper integration with sub-agents
+This repository implements ESRA for Hermes.  
+The pure conceptual and technical description of the architecture (principles, 8 levels, Loop Execution Protocol) lives in the separate repository:
+
+→ https://github.com/rrpauls/esra
 
 ---
 
-**Version:** 1.1  
-**Date:** July 2026  
-**Compatible with:** Hermes Agent + Evolutionary Self-Development Architecture
+**Version:** 1.2  
+**Date:** 19 July 2026  
+**Compatible with:** Hermes Agent + ESRA (Evolutionary Self-Recursive Architecture)

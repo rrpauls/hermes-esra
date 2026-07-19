@@ -1,43 +1,46 @@
-# Hermes Evolutionary Self-Development Fork
+# hermes-evolutionary-self-dev
 
-**Project:** A Hermes Agent fork with a full Evolutionary Self-Development Architecture — a meta-skills and tooling layer that turns Hermes’ native learning loop into a systematic, observable, and compounding self-development process.
+**Hermes implementation of ESRA — Evolutionary Self-Recursive Architecture**
 
-## Project Goal
+This repository contains the production-grade implementation of ESRA as a set of meta-skills, an orchestrator, and supporting tools for the Hermes agent.
 
-Hermes already has a strong native self-improvement mechanism (autonomous skill creation and evolution, persistent memory, Skills Hub).  
-This fork adds a **meta-layer** that makes evolution:
-
-- More deliberate and structured (via OODA)
-- Automatic and smart (via `hermes-evolution-orchestrator` + `evolution-hook.py`)
-- Auditable and improvable (via `loop-auditor`)
-- Antifragile and long-term oriented
+> The pure conceptual and technical description of the architecture lives in a separate repository:  
+> **https://github.com/rrpauls/esra** — Evolutionary Self-Recursive Architecture (specification only).
 
 ---
 
-## What Was Built
+## Purpose
 
-### Core Components
+Hermes already has a strong native self-improvement mechanism.  
+This repository adds a **meta-layer** that makes evolution:
+
+- Structured and conscious (via the ESRA loop)
+- Automatic and intelligent (via `hermes-evolution-orchestrator` + `evolution-hook.py`)
+- Auditable and improvable (via `loop-auditor`)
+- Antifragile and long-term
+
+---
+
+## Main Components
 
 | Component | Purpose | Location |
 |-----------|---------|----------|
-| `hermes-evolution-orchestrator` | Central conductor of evolution. Connects Hermes’ native loop with meta-skills | `optional-skills/evolutionary-self-dev/` |
-| `evolution-hook.py` | Smart task detector + history and pattern analysis. Decides when to launch the orchestrator | `tools/` |
-| `ooda-framework` | Structures improvements using Observe → Orient → Decide → Act | `optional-skills/evolutionary-self-dev/` |
-| `loop-auditor` (updated) | Meta-audit of the full evolutionary cycle, focused on Hermes + orchestrator | `optional-skills/evolutionary-self-dev/` |
-| `install-evolutionary-skills.sh` | One-command install of all skills + `AGENTS.md` | Fork root |
-| `AGENTS.md` | Ready-to-use instructions, triggers, and system description for Hermes | Fork root |
-| `hermes-codebase-engineer` | Specialized skill for programming and integration work in Hermes | `optional-skills/evolutionary-self-dev/` |
+| `hermes-evolution-orchestrator` | Central conductor of evolution. Connects Hermes native loop with meta-skills | `optional-skills/evolutionary-self-dev/` |
+| `evolution-hook.py` | Smart task detector + history/pattern analysis. Decides when to run the orchestrator | `tools/` |
+| `loop-auditor` | Meta-audit of the entire evolutionary process | `optional-skills/evolutionary-self-dev/` |
+| `install-evolutionary-skills.sh` | One-command installation of all skills + AGENTS.md | Root |
+| `AGENTS.md` | Ready-to-use instructions and triggers for Hermes | Root |
 
-### Additional Meta-Skills
+### Included meta-skills
 
-Also included: `self-improver`, `mental-model-updater`, `experimenter`, `antifragility-builder`, `system-dynamics-thinker`, `value-clarifier`, `optimizer-philosopher`, `self-observer`, `crisis-manager`.
+`self-observer`, `self-improver`, `value-clarifier`, `experimenter`, `mental-model-updater`, `antifragility-builder`, `optimizer-philosopher`, `system-dynamics-thinker`, `ooda-framework`, `crisis-manager`, `hermes-codebase-engineer`, and others.
 
 ---
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/hermes-evolutionary-self-dev.git
+git clone https://github.com/rrpauls/hermes-evolutionary-self-dev.git
 cd hermes-evolutionary-self-dev
 
 chmod +x install-evolutionary-skills.sh
@@ -45,58 +48,35 @@ chmod +x install-evolutionary-skills.sh
 ```
 
 After installation:
-- All meta-skills will be available under `~/.hermes/skills/evolutionary-self-dev/`
-- `~/.hermes/AGENTS.md` will contain usage instructions
+- All meta-skills appear in `~/.hermes/skills/evolutionary-self-dev/`
+- `~/.hermes/AGENTS.md` contains usage instructions
 
 ---
 
-## How the System Works
+## How the system works
 
 ```
 Hermes Native Learning Loop
-        ↓ (after a complex task / skill creation)
+        ↓ (after complex task / skill creation)
 evolution-hook.py (analyzes context + history)
         ↓ (decides whether to run)
 hermes-evolution-orchestrator
         ↓
-ooda-framework → self-improver → mental-model-updater → ...
+Self-Observer → Self-Improver → Value-Clarifier → Experimenter → ...
         ↓ (periodically)
 loop-auditor (meta-audit of the cycle)
 ```
 
-**Key principles:**
-- Non-invasiveness (everything lives in `optional-skills/` and `tools/`)
-- Gradual automation (manual triggers → `evolution-hook.py` → future native hooks)
-- Iterative improvement of the evolution process itself
+---
+
+## Relationship to ESRA
+
+- **esra** (https://github.com/rrpauls/esra) = pure description of the architecture (what it is, principles, 8 levels, Loop Execution Protocol)
+- **hermes-evolutionary-self-dev** (this repo) = concrete implementation for Hermes
+
+This separation keeps the conceptual core clean and allows other implementations (standalone Python engine, other agents, etc.) in the future.
 
 ---
 
-## Current Status (July 2026)
-
-**Done:**
-- `hermes-evolution-orchestrator`
-- `evolution-hook.py` (with history + pattern analysis)
-- `install-evolutionary-skills.sh`
-- `AGENTS.md`
-- `loop-auditor` (adapted specifically for Hermes)
-- `ooda-framework`
-- `hermes-codebase-engineer`
-- Full fork structure + documentation
-
-The project is ready for real use and further development.
-
----
-
-## Next Development Steps
-
-- Implement native integration of `evolution-hook.py` as a Hermes tool
-- Add visual/structured evolution reports
-- Strengthen use of history patterns in decision-making
-- Run real experiments on the Hermes fork
-
----
-
-**Project style:** Evolutionary Self-Development Architecture  
-**License:** MIT (same as original Hermes)
-
-Ready to fork, use, and evolve further.
+**Status:** Active (July 2026)  
+This repository implements ESRA for Hermes.
