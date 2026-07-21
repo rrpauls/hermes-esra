@@ -3,7 +3,7 @@
 **Goal:** Establish Hermes as a self-improving agent through systematic integration of the Evolutionary Self-Recursive Architecture (ESRA).
 
 **Current Status:** v1.2 (Core ESRA Meta-Skills Installed)
-**Last Updated:** 22 July 2026
+**Last Updated:** 19 July 2026
 
 ---
 
@@ -70,18 +70,18 @@
   - Anomalies and crisis interventions
 
 #### 2.3 Baseline Metrics
-- [ ] Define KPIs:
+- [x] Define KPIs:
   - Skill quality (confidence, test coverage, reusability)
   - Evolutionary pace (cycles per day, new skills/week)
   - Value coherence (drift from core principles)
   - Hermes task success rate (with/without evolved skills)
-- [ ] Historical snapshots (monthly)
+- [x] Historical snapshots (monthly)
 
 #### 2.4 Human Oversight Integration
-- [ ] GitHub Issues as evolutionary audit trail
+- [x] GitHub Issues as evolutionary audit trail
   - Auto-create issues from crisis-manager interventions
   - Periodic summary issues (e.g., "Weekly Evolution Report")
-- [ ] Pull requests for skill updates
+- [x] Pull requests for skill updates
   - Branch naming: `evolve/skill-name-vN`
   - Automated test runs before merge
 
