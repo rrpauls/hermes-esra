@@ -46,9 +46,15 @@ class EvolutionHook:
 
     def _ensure_history_file(self):
         """Create history file if it does not exist."""
-        if not self.history_file.exists():
+        if not self.history_file.parent.exists():
             self.history_file.parent.mkdir(parents=True, exist_ok=True)
-            self.history_file.write_text("[]", encoding="utf-8")
+
+        if not self.history_file.exists():
+            fd = os.open(self.history_file, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                f.write("[]")
+        elif self.history_file.stat().st_mode & 0o777 != 0o600:
+            os.chmod(self.history_file, 0o600)
 
     def load_history(self, limit: int = 10) -> list:
         """Load recent evolution events."""
@@ -67,9 +73,11 @@ class EvolutionHook:
             history.append(event)
             if len(history) > 50:
                 history = history[-50:]
-            self.history_file.write_text(
-                json.dumps(history, indent=2, ensure_ascii=False), encoding="utf-8"
-            )
+
+            # Write securely to ensure permissions aren't changed if written another way
+            fd = os.open(self.history_file, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                f.write(json.dumps(history, indent=2, ensure_ascii=False))
         except Exception as e:
             print(f"Warning: Could not save evolution history: {e}")
 

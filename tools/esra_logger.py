@@ -1,7 +1,7 @@
 import json
 import os
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 class ESRALogger:
@@ -22,7 +22,7 @@ class ESRALogger:
         """
         Logs a single ESRA cycle to a JSON file.
         """
-        timestamp = datetime.utcnow().isoformat()
+        timestamp = datetime.now(timezone.utc).isoformat()
 
         # Log schema matching ROADMAP requirements
         log_entry = {
@@ -54,7 +54,10 @@ class ESRALogger:
         filename = f"esra_cycle_{safe_timestamp}.json"
         filepath = self.log_dir / filename
 
-        with open(filepath, "w", encoding="utf-8") as f:
+        # Create file securely (open with specific permissions if possible, else chmod)
+        # Using os.open to securely create the file with 0o600 permissions
+        fd = os.open(filepath, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
             json.dump(log_entry, f, indent=2, ensure_ascii=False)
 
         return str(filepath)
