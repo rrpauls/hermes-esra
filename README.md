@@ -72,7 +72,7 @@ loop-auditor (meta-audit of the cycle)
 ## Relationship to ESRA
 
 - **esra** (https://github.com/rrpauls/esra) = pure description of the architecture (what it is, principles, 8 levels, Loop Execution Protocol)
-- **hermes-evolutionary-self-dev** (this repo) = concrete implementation for Hermes
+- **hermes-esra** (this repo) = concrete implementation for Hermes
 
 This separation keeps the conceptual core clean and allows other implementations (standalone Python engine, other agents, etc.) in the future.
 
