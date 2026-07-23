@@ -70,3 +70,10 @@ def test_display_dashboard_populated(capsys):
         assert "Total Cycles:" in captured.out
         assert "Success Rate:" in captured.out
         assert "[████████████████████]" in captured.out  # 100% success rate bar
+
+        # Verify our new "Recent Cycles" feature is displayed correctly
+        assert "Recent Cycles (Last 5):" in captured.out
+        assert "SUCCESS" in captured.out
+        assert "Complexity: 5" in captured.out
+        assert "Stage: ACT" in captured.out
+        assert "Duration: 1.0s" in captured.out

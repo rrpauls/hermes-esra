@@ -134,6 +134,34 @@ class EvolutionDashboard:
         else:
             for parent, children in metrics["skill_genealogy"].items():
                 print(f"  {CLR_CYAN}{parent}{CLR_RESET} -> {', '.join(children)}")
+
+        print("-"*50)
+        print(f"{CLR_BOLD}Recent Cycles (Last 5):{CLR_RESET}")
+        if not logs:
+            print("  No cycle history available.")
+        else:
+            for log in reversed(logs[-5:]):
+                timestamp = log.get("timestamp", "Unknown")
+                if "T" in timestamp:
+                    timestamp = timestamp.split(".")[0].replace("T", " ")
+                outputs = log.get("outputs", {})
+                success = outputs.get("success", False)
+                status = f"{CLR_GREEN}✓ SUCCESS{CLR_RESET}" if success else f"{CLR_RED}✗ FAILED{CLR_RESET}"
+
+                complexity = log.get("input_state", {}).get("task_complexity")
+                if complexity is None:
+                    complexity = "N/A"
+                stage = log.get("orchestrator_decisions", {}).get("meta_loop_stage") or "N/A"
+                duration = log.get("duration_and_resources", {}).get("duration_seconds")
+                if duration is not None:
+                    try:
+                        duration_str = f"{float(duration):.1f}s"
+                    except (ValueError, TypeError):
+                        duration_str = str(duration)
+                else:
+                    duration_str = "N/A"
+
+                print(f"  - {timestamp} | {status} | Complexity: {complexity} | Stage: {stage} | Duration: {duration_str}")
         print("="*50)
 
 if __name__ == "__main__":
