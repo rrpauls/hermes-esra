@@ -68,10 +68,15 @@ class ESRALogger:
         Deletes log files older than 30 days.
         """
         cutoff = time.time() - (30 * 24 * 60 * 60)
-        for filepath in self.log_dir.glob("*.json"):
-            if filepath.is_file():
-                if filepath.stat().st_mtime < cutoff:
-                    try:
-                        filepath.unlink()
-                    except Exception as e:
-                        print(f"Warning: Failed to delete old log {filepath}: {e}")
+        # ⚡ BOLT OPTIMIZATION: Use os.scandir to avoid redundant stat() syscalls when checking modification time
+        try:
+            with os.scandir(self.log_dir) as entries:
+                for entry in entries:
+                    if entry.is_file() and entry.name.endswith(".json"):
+                        if entry.stat().st_mtime < cutoff:
+                            try:
+                                Path(entry.path).unlink()
+                            except Exception as e:
+                                print(f"Warning: Failed to delete old log {entry.path}: {e}")
+        except FileNotFoundError:
+            pass

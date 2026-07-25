@@ -4,3 +4,6 @@
 ## 2024-05-19 - Duplicate File I/O Optimization in Skill Validator
 **Learning:** In codebases where files are repeatedly parsed (like Markdown frontmatter and full-text searches), redundant `file.read_text()` operations can significantly slow down execution when processing many files.
 **Action:** When a file parsing function successfully reads the raw content of a file, refactor it to return that raw content alongside its parsed structures, so downstream steps can reuse the text rather than reading from disk again.
+## 2024-05-20 - Optimize redundant file system stat() calls during directory iteration
+**Learning:** In operations iterating over many files and checking their attributes (like `st_mtime`), using `Path.glob()` combined with `Path.stat()` causes redundant `stat()` syscalls. `os.scandir()` retrieves file attributes simultaneously with directory entries, significantly reducing file system overhead for large directories.
+**Action:** When filtering or processing directory contents based on file attributes, replace `Path.glob()` and `Path.stat()` with `os.scandir()` to improve performance.
