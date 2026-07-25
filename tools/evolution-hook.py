@@ -24,6 +24,7 @@ Author: ESRA / hermes-evolutionary-self-dev
 
 from __future__ import annotations
 import os
+import sys
 import json
 from pathlib import Path
 from typing import Any, Dict, Optional, List
@@ -79,7 +80,7 @@ class EvolutionHook:
             with os.fdopen(fd, "w", encoding="utf-8") as f:
                 f.write(json.dumps(history, indent=2, ensure_ascii=False))
         except Exception as e:
-            print(f"Warning: Could not save evolution history: {e}")
+            print(f"Warning: Could not save evolution history: {e}", file=sys.stderr)
 
     def analyze_recent_patterns(self, limit: int = 10) -> Dict[str, Any]:
         """Analyze recent history for patterns (repeated focus areas, frequency)."""
