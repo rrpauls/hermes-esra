@@ -23,7 +23,7 @@ class EvolutionDashboard:
                 with open(filepath, "r", encoding="utf-8") as f:
                     logs.append(json.load(f))
             except Exception as e:
-                print(f"Warning: Could not read {filepath}: {e}")
+                print(f"Warning: Could not read {filepath}: {e}", file=sys.stderr)
         return logs
 
     def calculate_metrics(self, logs):
