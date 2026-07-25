@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -74,4 +75,4 @@ class ESRALogger:
                     try:
                         filepath.unlink()
                     except Exception as e:
-                        print(f"Warning: Failed to delete old log {filepath}: {e}")
+                        print(f"Warning: Failed to delete old log {filepath}: {e}", file=sys.stderr)
