@@ -141,6 +141,11 @@ class ExperimentRunner:
 
     def load_experiment(self, experiment_id: str) -> Optional[Experiment]:
         """Loads a specific experiment by ID."""
+        # Security: Prevent path traversal
+        if Path(experiment_id).name != experiment_id:
+            print(f"Error loading experiment: Invalid experiment ID format: {experiment_id}", file=sys.stderr)
+            return None
+
         filepath = self.experiments_dir / f"{experiment_id}.json"
         if not filepath.exists():
             return None

@@ -173,6 +173,11 @@ class SkillInjector:
         """
         Loads or reloads a skill dynamically into the current Python execution context.
         """
+        # Security: Prevent path traversal
+        if Path(skill_name).name != skill_name:
+            print(f"Error hot-reloading skill: Invalid skill name format: {skill_name}", file=sys.stderr)
+            return False
+
         # If the skill represents a Python module in tools/ or skills/
         # we try to locate and reload it using importlib.
         try:
