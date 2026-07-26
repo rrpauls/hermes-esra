@@ -240,9 +240,15 @@ def stage_and_promote(skills_src: Path, staging_dir: Path, prod_dir: Path, verbo
     prod_dir = Path(prod_dir)
 
     # 1. Clean staging directory and copy source files there
-    if staging_dir.exists():
-        shutil.rmtree(staging_dir)
-    staging_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+    if not staging_dir.exists():
+        staging_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+    else:
+        # Securely empty directory instead of rmtree to avoid TOCTOU
+        for item in staging_dir.iterdir():
+            if item.is_dir():
+                shutil.rmtree(item)
+            else:
+                item.unlink()
 
     print(f"{CLR_BOLD}1. Copying skills from src '{skills_src}' to staging '{staging_dir}'...{CLR_RESET}")
     for item in skills_src.iterdir():
@@ -279,9 +285,14 @@ def stage_and_promote(skills_src: Path, staging_dir: Path, prod_dir: Path, verbo
     # 4. Promote from staging to production
     try:
         print(f"{CLR_BOLD}4. Promoting skills from staging to production directory '{prod_dir}'...{CLR_RESET}")
-        if prod_dir.exists():
-            shutil.rmtree(prod_dir)
-        prod_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if not prod_dir.exists():
+            prod_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+        else:
+            for item in prod_dir.iterdir():
+                if item.is_dir():
+                    shutil.rmtree(item)
+                else:
+                    item.unlink()
         for item in staging_dir.iterdir():
             if item.is_dir():
                 shutil.copytree(item, prod_dir / item.name)
@@ -298,9 +309,22 @@ def stage_and_promote(skills_src: Path, staging_dir: Path, prod_dir: Path, verbo
         print(f"❌ {CLR_RED}Critical error during promotion: {e}{CLR_RESET}", file=sys.stderr)
         if backup_dir and backup_dir.exists():
             print(f"🔄 {CLR_BOLD}Attempting rollback to previous production state...{CLR_RESET}")
-            if prod_dir.exists():
-                shutil.rmtree(prod_dir)
-            shutil.copytree(backup_dir, prod_dir)
+            if not prod_dir.exists():
+                prod_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+            else:
+                for item in prod_dir.iterdir():
+                    if item.is_dir():
+                        shutil.rmtree(item)
+                    else:
+                        item.unlink()
+
+            # Using copytree with dirs_exist_ok=True to avoid creating prod_dir again
+            for item in backup_dir.iterdir():
+                if item.is_dir():
+                    shutil.copytree(item, prod_dir / item.name)
+                elif item.is_file():
+                    shutil.copy2(item, prod_dir)
+
             shutil.rmtree(backup_dir)
             print(f"✅ {CLR_GREEN}Rollback successful.{CLR_RESET}")
         return False
@@ -315,7 +339,7 @@ def main():
     parser = argparse.ArgumentParser(description="ESRA Skill Validation & Promotion Utility")
     parser.add_argument("--skills-dir", default="optional-skills/evolutionary-self-dev",
                         help="Path to development skills directory")
-    parser.add_argument("--staging-dir", default="/tmp/esra_skills_staging",
+    parser.add_argument("--staging-dir", default=None,
                         help="Path to staging skills directory")
     parser.add_argument("--prod-dir", default=str(Path.home() / ".hermes" / "skills" / "evolutionary-self-dev"),
                         help="Path to production skills directory")
@@ -327,7 +351,13 @@ def main():
     args = parser.parse_args()
 
     if args.stage:
-        success = stage_and_promote(args.skills_dir, Path(args.staging_dir), Path(args.prod_dir), args.verbose)
+        staging_dir = Path(args.staging_dir) if args.staging_dir else Path(tempfile.mkdtemp(prefix="esra_skills_staging_"))
+        success = stage_and_promote(args.skills_dir, staging_dir, Path(args.prod_dir), args.verbose)
+
+        # Clean up dynamically created staging dir if we created it
+        if not args.staging_dir and staging_dir.exists():
+            shutil.rmtree(staging_dir)
+
         sys.exit(0 if success else 1)
     else:
         validator = SkillValidator(Path(args.skills_dir), verbose=args.verbose)
