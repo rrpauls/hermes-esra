@@ -563,9 +563,13 @@ def main():
     elif args.command == "list":
         exps = runner.list_experiments()
         if not exps:
-            print(f"{CLR_YELLOW}No experiments have been defined yet.{CLR_RESET}")
+            print("=" * 70)
+            print(f"  {CLR_CYAN}{CLR_BOLD}ESRA Active Value-Driven Experiments{CLR_RESET}")
+            print("=" * 70)
+            print(f"\n{CLR_YELLOW}💡 No experiments have been defined yet.{CLR_RESET}")
             print("Create your first experiment using:")
-            print(f"  {CLR_BOLD}python tools/experiment_runner.py create --name ...{CLR_RESET}")
+            print(f"  {CLR_BOLD}python tools/experiment_runner.py create --name ...{CLR_RESET}\n")
+            print("=" * 70)
             sys.exit(0)
 
         print("=" * 70)
