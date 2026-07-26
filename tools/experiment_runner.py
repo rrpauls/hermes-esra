@@ -150,7 +150,9 @@ class ExperimentRunner:
         if not filepath.exists():
             return None
         try:
-            data = json.loads(filepath.read_text(encoding="utf-8"))
+            # ⚡ BOLT OPTIMIZATION: Use json.load with open() instead of json.loads(read_text()) to avoid buffering entire file contents in memory
+            with open(filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
             return Experiment.from_dict(data)
         except Exception as e:
             print(f"Error loading experiment {experiment_id}: {e}", file=sys.stderr)
@@ -161,7 +163,9 @@ class ExperimentRunner:
         experiments = []
         for filepath in sorted(self.experiments_dir.glob("EXP-*.json")):
             try:
-                data = json.loads(filepath.read_text(encoding="utf-8"))
+                # ⚡ BOLT OPTIMIZATION: Use json.load with open() instead of json.loads(read_text()) to avoid buffering entire file contents in memory
+                with open(filepath, "r", encoding="utf-8") as f:
+                    data = json.load(f)
                 experiments.append(Experiment.from_dict(data))
             except Exception:
                 pass

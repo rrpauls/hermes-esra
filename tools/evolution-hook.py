@@ -60,7 +60,9 @@ class EvolutionHook:
     def load_history(self, limit: int = 10) -> list:
         """Load recent evolution events."""
         try:
-            data = json.loads(self.history_file.read_text(encoding="utf-8"))
+            # ⚡ BOLT OPTIMIZATION: Use json.load with open() instead of json.loads(read_text()) to avoid buffering entire file contents in memory
+            with open(self.history_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
             return data[-limit:] if isinstance(data, list) else []
         except Exception:
             return []
@@ -68,7 +70,9 @@ class EvolutionHook:
     def record_evolution_event(self, event: Dict[str, Any]):
         """Save an evolution event to history (keeps last 50)."""
         try:
-            history = json.loads(self.history_file.read_text(encoding="utf-8"))
+            # ⚡ BOLT OPTIMIZATION: Use json.load with open() instead of json.loads(read_text()) to avoid buffering entire file contents in memory
+            with open(self.history_file, "r", encoding="utf-8") as f:
+                history = json.load(f)
             if not isinstance(history, list):
                 history = []
             history.append(event)

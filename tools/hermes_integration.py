@@ -309,7 +309,9 @@ Always adhere to these principles in task execution.
         trace_data = []
         if self.trace_file.exists():
             try:
-                trace_data = json.loads(self.trace_file.read_text(encoding="utf-8"))
+                # ⚡ BOLT OPTIMIZATION: Use json.load with open() instead of json.loads(read_text()) to avoid buffering entire file contents in memory
+                with open(self.trace_file, "r", encoding="utf-8") as f:
+                    trace_data = json.load(f)
             except Exception:
                 trace_data = []
 
