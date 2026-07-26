@@ -335,7 +335,7 @@ To help advance this roadmap:
 ## Quick Links
 
 - **ESRA Specification:** https://github.com/rrpauls/esra
-- **Hermes Repository:** [link to Hermes codebase]
+- **Hermes Repository:** https://github.com/nousresearch
 - **Meta-Skills:** `~/.hermes/skills/evolutionary-self-dev/`
 - **Evolution Logs:** `~/.hermes/evolution-logs/`
 - **Issue Tracker:** GitHub Issues (tagged `evolution`, `esra`, `skill-*`)
