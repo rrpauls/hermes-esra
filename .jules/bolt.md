@@ -7,3 +7,6 @@
 ## 2026-07-25 - Optimize redundant file system stat() calls during directory iteration
 **Learning:** In operations iterating over many files and checking their attributes (like `st_mtime`), using `Path.glob()` combined with `Path.stat()` causes redundant `stat()` syscalls. `os.scandir()` retrieves file attributes simultaneously with directory entries, significantly reducing file system overhead for large directories.
 **Action:** When filtering or processing directory contents based on file attributes, replace `Path.glob()` and `Path.stat()` with `os.scandir()` to improve performance.
+## 2026-07-26 - Optimize JSON Loading Memory Usage
+**Learning:** `json.loads(file.read_text())` buffers the entire file content into a memory string before parsing, causing a spike in peak memory usage. Using `with open(filepath, 'r') as f: json.load(f)` streams the file content directly to the JSON parser, significantly reducing memory consumption and slightly improving performance for large files.
+**Action:** When reading JSON files from disk, prefer the `with open(...) as f: json.load(f)` pattern over loading the file content as a string first. Ensure performance optimizations are accompanied by explanatory comments like `# ⚡ BOLT OPTIMIZATION: ...`. Always clean up benchmarking scripts.
