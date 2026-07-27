@@ -87,7 +87,8 @@ class HermesPluginInterface:
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "hermes_home": str(self.hermes_home),
             "python_version": sys.version,
-            "loaded_skills_count": len(list((self.hermes_home / "skills").glob("**/*.md"))) if (self.hermes_home / "skills").exists() else 0,
+            # ⚡ BOLT OPTIMIZATION: Use generator to avoid materializing list in memory
+            "loaded_skills_count": sum(1 for _ in (self.hermes_home / "skills").rglob("*.md")) if (self.hermes_home / "skills").exists() else 0,
             "active_plugins": ["esra-logger", "evolution-hook", "hermes-plugin-interface"]
         }
 

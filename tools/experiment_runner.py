@@ -112,8 +112,8 @@ class ExperimentRunner:
     ) -> Experiment:
         """Creates a new experiment and saves it to disk securely (0o600)."""
         # Generate ID
-        existing = list(self.experiments_dir.glob("EXP-*.json"))
-        next_num = len(existing) + 1
+        # ⚡ BOLT OPTIMIZATION: Use generator to avoid materializing list in memory
+        next_num = sum(1 for _ in self.experiments_dir.glob("EXP-*.json")) + 1
         experiment_id = f"EXP-{next_num:03d}"
 
         experiment = Experiment(
