@@ -2,6 +2,9 @@
 
 This journal documents critical UX and accessibility learnings from working with the ESRA implementation.
 
+## 2026-07-27 - [Actionable Error States in CLI Tools]
+**Learning:** Returning unhelpful error messages (e.g., "Experiment not found") in CLI tools leads to dead-ends. When a user provides an invalid ID or malformed configuration, they are left guessing how to resolve it. Without clear next steps, users abandon flows.
+**Action:** Always complement error states with a highly visible `💡 Tip:` offering an actionable command to resolve the issue (e.g., suggesting a command to list available IDs).
 
 ## 2026-07-19 - [TTY-Aware ANSI Escape Codes and Empty State Actionability in CLI Dashboards]
 **Learning:** CLI terminal tools often suffer from poor visual feedback and can break when piped or logged if ANSI escape codes are hardcoded. Additionally, an uninformative empty state with 0 metrics leaves users confused about how to initiate the system.

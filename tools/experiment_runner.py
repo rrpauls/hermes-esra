@@ -542,6 +542,7 @@ def main():
                 safeguards = json.loads(args.safeguards)
             except Exception as e:
                 print(f"{CLR_RED}Error: Invalid safeguards JSON format: {e}{CLR_RESET}", file=sys.stderr)
+                print(f"{CLR_YELLOW}💡 Tip: Ensure it is valid JSON, e.g., '{{\"max_error_rate\": 0.05}}'{CLR_RESET}", file=sys.stderr)
                 sys.exit(1)
 
         stressors = [s.strip() for s in args.stressors.split(",")] if args.stressors else []
@@ -588,6 +589,11 @@ def main():
         print("=" * 70)
 
     elif args.command == "run":
+        if not runner.load_experiment(args.id):
+            print(f"{CLR_RED}Error: Experiment '{args.id}' not found.{CLR_RESET}", file=sys.stderr)
+            print(f"{CLR_YELLOW}💡 Tip: Run 'python tools/experiment_runner.py list' to view available experiments.{CLR_RESET}", file=sys.stderr)
+            sys.exit(1)
+
         try:
             print(f"{CLR_CYAN}Initializing execution of experiment {CLR_BOLD}{args.id}{CLR_RESET} ({args.trials} trials)...")
             results = runner.run_experiment(args.id, args.trials)
@@ -647,7 +653,8 @@ def main():
     elif args.command == "report":
         exp = runner.load_experiment(args.id)
         if not exp:
-            print(f"{CLR_RED}Error: Experiment {args.id} not found.{CLR_RESET}", file=sys.stderr)
+            print(f"{CLR_RED}Error: Experiment '{args.id}' not found.{CLR_RESET}", file=sys.stderr)
+            print(f"{CLR_YELLOW}💡 Tip: Run 'python tools/experiment_runner.py list' to view available experiments.{CLR_RESET}", file=sys.stderr)
             sys.exit(1)
 
         report = ExperimentRunner.generate_markdown_report(exp)
