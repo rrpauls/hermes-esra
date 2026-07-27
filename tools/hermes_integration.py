@@ -203,6 +203,10 @@ class SkillInjector:
         """
         Saves a copy of a skill with explicit versioning, allowing multiple variants to coexist.
         """
+        # Security: Prevent path traversal
+        if Path(skill_name).name != skill_name:
+            raise ValueError(f"Invalid skill name format: {skill_name}")
+
         versioned_dir = self.skills_dir / f"{skill_name}-v{version}"
         versioned_dir.mkdir(parents=True, exist_ok=True)
 
