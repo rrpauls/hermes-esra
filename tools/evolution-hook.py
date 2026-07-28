@@ -48,7 +48,7 @@ class EvolutionHook:
     def _ensure_history_file(self):
         """Create history file if it does not exist."""
         if not self.history_file.parent.exists():
-            self.history_file.parent.mkdir(parents=True, exist_ok=True)
+            self.history_file.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
 
         if not self.history_file.exists():
             fd = os.open(self.history_file, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)

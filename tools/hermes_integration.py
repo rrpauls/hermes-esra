@@ -40,7 +40,7 @@ class HermesPluginInterface:
         self._ensure_directories()
 
     def _ensure_directories(self):
-        self.hermes_home.mkdir(parents=True, exist_ok=True)
+        self.hermes_home.mkdir(parents=True, exist_ok=True, mode=0o700)
 
     def post_task_hook(self, task_context: Dict[str, Any], result: Dict[str, Any], metrics: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -168,7 +168,7 @@ class SkillInjector:
     """
     def __init__(self, skills_dir: Optional[Path] = None):
         self.skills_dir = Path(skills_dir or Path.home() / ".hermes" / "skills" / "evolutionary-self-dev")
-        self.skills_dir.mkdir(parents=True, exist_ok=True)
+        self.skills_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
 
     def hot_reload_skill(self, skill_name: str) -> bool:
         """
@@ -208,7 +208,7 @@ class SkillInjector:
             raise ValueError(f"Invalid skill name format: {skill_name}")
 
         versioned_dir = self.skills_dir / f"{skill_name}-v{version}"
-        versioned_dir.mkdir(parents=True, exist_ok=True)
+        versioned_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
 
         skill_file = versioned_dir / "SKILL.md"
 
@@ -279,7 +279,7 @@ class ESRAFeedbackLoop:
     """
     def __init__(self, config_dir: Optional[Path] = None):
         self.config_dir = Path(config_dir or Path.home() / ".hermes" / "config")
-        self.config_dir.mkdir(parents=True, exist_ok=True)
+        self.config_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
         self.prompt_file = self.config_dir / "hermes_system_prompt.txt"
         self.trace_file = self.config_dir / "reasoning_trace.json"
 

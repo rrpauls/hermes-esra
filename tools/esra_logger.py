@@ -16,7 +16,7 @@ class ESRALogger:
         else:
             self.log_dir = Path(log_dir)
 
-        self.log_dir.mkdir(parents=True, exist_ok=True)
+        self.log_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
         self.clean_old_logs()
 
     def log_cycle(self, input_state, decisions, outputs, duration_resources):
