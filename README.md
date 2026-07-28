@@ -33,7 +33,7 @@ This repository adds a **meta-layer** that makes evolution:
 
 ### Included meta-skills
 
-`self-observer`, `self-improver`, `value-clarifier`, `experimenter`, `mental-model-updater`, `antifragility-builder`, `optimizer-philosopher`, `system-dynamics-thinker`, `ooda-framework`, `crisis-manager`, `hermes-codebase-engineer`, and others.
+`self-observer`, `self-improver`, `value-clarifier`, `experimenter`, `mental-model-updater`, `antifragility-builder`, `optimizer-philosopher`, `system-dynamics-thinker`, `ooda-framework`, `crisis-[...]`
 
 ---
 
