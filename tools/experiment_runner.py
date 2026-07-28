@@ -94,7 +94,7 @@ class ExperimentRunner:
 
     def _ensure_directories(self):
         """Creates required directories securely with 0o700 permissions."""
-        self.base_dir.mkdir(parents=True, exist_ok=True)
+        self.base_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
         # Avoid modifying existing directories if they already exist, but ensure 0o700 on create
         if not self.experiments_dir.exists():
             self.experiments_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
