@@ -40,8 +40,8 @@ This repository adds a **meta-layer** that makes evolution:
 ## Quick Start
 
 ```bash
-git clone https://github.com/rrpauls/hermes-evolutionary-self-dev.git
-cd hermes-evolutionary-self-dev
+git clone https://github.com/rrpauls/hermes-esra.git
+cd hermes-esra
 
 chmod +x install-evolutionary-skills.sh
 ./install-evolutionary-skills.sh
