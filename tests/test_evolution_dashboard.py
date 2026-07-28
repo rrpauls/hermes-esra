@@ -2,13 +2,9 @@ import os
 import json
 import pytest
 import tempfile
-import importlib
 from pathlib import Path
 from tools.esra_logger import ESRALogger
-
-# Import module with dash in name
-evolution_dashboard = importlib.import_module("tools.evolution-dashboard")
-EvolutionDashboard = evolution_dashboard.EvolutionDashboard
+from tools.evolution_dashboard import EvolutionDashboard
 
 def test_dashboard_aggregates():
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -52,7 +48,7 @@ def test_display_dashboard_empty(capsys):
         captured = capsys.readouterr()
         assert "ESRA Evolution Dashboard" in captured.out
         assert "💡 No evolution cycles have been recorded yet." in captured.out
-        assert "python tools/evolution-hook.py" in captured.out
+        assert "python tools/evolution_hook.py" in captured.out
 
 def test_display_dashboard_populated(capsys):
     with tempfile.TemporaryDirectory() as tmpdir:

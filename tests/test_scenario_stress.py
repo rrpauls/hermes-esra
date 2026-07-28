@@ -2,14 +2,10 @@ import os
 import time
 import pytest
 import tempfile
-import importlib
 from pathlib import Path
 from tools.esra_logger import ESRALogger
 from tools.baseline_metrics import BaselineMetrics
-
-# Import hook with importlib
-evolution_hook = importlib.import_module("tools.evolution-hook")
-EvolutionHook = evolution_hook.EvolutionHook
+from tools.evolution_hook import EvolutionHook
 
 def test_stress_consecutive_cycles():
     """Simulates 60 rapid consecutive ESRA loops to stress test performance and logging limits."""

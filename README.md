@@ -15,7 +15,7 @@ Hermes already has a strong native self-improvement mechanism.
 This repository adds a **meta-layer** that makes evolution:
 
 - Structured and conscious (via the ESRA loop)
-- Automatic and intelligent (via `hermes-evolution-orchestrator` + `evolution-hook.py`)
+- Automatic and intelligent (via `hermes-evolution-orchestrator` + `evolution_hook.py`)
 - Auditable and improvable (via `loop-auditor`)
 - Antifragile and long-term
 
@@ -25,10 +25,10 @@ This repository adds a **meta-layer** that makes evolution:
 
 | Component | Purpose | Location |
 |-----------|---------|----------|
-| `hermes-evolution-orchestrator` | Central conductor of evolution. Connects Hermes native loop with meta-skills | `optional-skills/evolutionary-self-dev/` |
-| `evolution-hook.py` | Smart task detector + history/pattern analysis. Decides when to run the orchestrator | `tools/` |
-| `loop-auditor` | Meta-audit of the entire evolutionary process | `optional-skills/evolutionary-self-dev/` |
-| `install-evolutionary-skills.sh` | One-command installation of all skills + AGENTS.md | Root |
+| `hermes-evolution-orchestrator` | Central conductor of evolution. Connects Hermes native loop with meta-skills | `skills/` |
+| `evolution_hook.py` | Smart task detector + history/pattern analysis. Decides when to run the orchestrator | `tools/` |
+| `loop-auditor` | Meta-audit of the entire evolutionary process | `skills/` |
+| `install.sh` | One-command installation of all skills + AGENTS.md | Root |
 | `AGENTS.md` | Ready-to-use instructions and triggers for Hermes | Root |
 
 ### Included meta-skills
@@ -43,12 +43,12 @@ This repository adds a **meta-layer** that makes evolution:
 git clone https://github.com/rrpauls/hermes-esra.git
 cd hermes-esra
 
-chmod +x install-evolutionary-skills.sh
-./install-evolutionary-skills.sh
+chmod +x install.sh
+./install.sh
 ```
 
 After installation:
-- All meta-skills appear in `~/.hermes/skills/evolutionary-self-dev/`
+- All meta-skills appear in `~/.hermes/skills/esra/`
 - `~/.hermes/AGENTS.md` contains usage instructions
 
 ---
@@ -58,7 +58,7 @@ After installation:
 ```
 Hermes Native Learning Loop
         ↓ (after complex task / skill creation)
-evolution-hook.py (analyzes context + history)
+evolution_hook.py (analyzes context + history)
         ↓ (decides whether to run)
 hermes-evolution-orchestrator
         ↓

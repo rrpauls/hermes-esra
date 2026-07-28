@@ -2,12 +2,9 @@ import os
 import json
 import pytest
 import tempfile
-import importlib
 from pathlib import Path
 
-# Import module with dash in name
-evolution_hook = importlib.import_module("tools.evolution-hook")
-EvolutionHook = evolution_hook.EvolutionHook
+from tools.evolution_hook import EvolutionHook
 
 def test_hook_history_permissions():
     with tempfile.TemporaryDirectory() as tmpdir:

@@ -1,15 +1,15 @@
 #!/bin/bash
 #
-# install-evolutionary-skills.sh
-# Automatic installation of Evolutionary Self-Development skills into Hermes Agent
+# install.sh
+# Automatic installation of ESRA meta-skills into Hermes Agent
 #
 # Usage:
 #   1. Clone this repo: git clone https://github.com/rrpauls/hermes-esra.git
 #   2. cd hermes-esra
-#   3. ./install-evolutionary-skills.sh
+#   3. ./install.sh
 #
-# The script copies all meta-skills from optional-skills/evolutionary-self-dev/
-# into ~/.hermes/skills/evolutionary-self-dev/
+# The script copies all meta-skills from skills/
+# into ~/.hermes/skills/esra/
 #
 # After installation:
 #   - Restart Hermes or use the /skills command in chat
@@ -19,15 +19,14 @@
 set -e
 
 echo "=========================================="
-echo "  Hermes Evolutionary Self-Development"
-echo "  Skills Installer"
+echo "  Hermes ESRA Skills Installer"
 echo "=========================================="
 echo
 
 # Resolve paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_DIR="$SCRIPT_DIR/optional-skills/evolutionary-self-dev"
-DEST_DIR="$HOME/.hermes/skills/evolutionary-self-dev"
+SOURCE_DIR="$SCRIPT_DIR/skills"
+DEST_DIR="$HOME/.hermes/skills/esra"
 AGENTS_SOURCE="$SCRIPT_DIR/AGENTS.md"
 AGENTS_DEST="$HOME/.hermes/AGENTS.md"
 
@@ -67,7 +66,7 @@ fi
 echo
 
 # List installed skills
-echo "📋 Installed Evolutionary Self-Development skills:"
+echo "📋 Installed ESRA skills:"
 ls -1 "$DEST_DIR" | sed 's/^/   - /'
 echo
 

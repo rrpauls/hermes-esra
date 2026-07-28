@@ -125,7 +125,7 @@ if __name__ == "__main__":
         print("="*50)
         print(f"\n{CLR_YELLOW}💡 No evolution cycles have been recorded yet.{CLR_RESET}")
         print("To run your first ESRA cycle and see evolution metrics, execute:")
-        print(f"  {CLR_BOLD}python tools/evolution-hook.py{CLR_RESET}\n")
+        print(f"  {CLR_BOLD}python tools/evolution_hook.py{CLR_RESET}\n")
         print("="*50)
     else:
         print(f"{CLR_CYAN}{CLR_BOLD}Defined KPIs:{CLR_RESET}")

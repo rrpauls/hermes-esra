@@ -340,11 +340,11 @@ def main():
     CLR_RED = "\033[31m" if use_color else ""
 
     parser = argparse.ArgumentParser(description="ESRA Skill Validation & Promotion Utility")
-    parser.add_argument("--skills-dir", default="optional-skills/evolutionary-self-dev",
+    parser.add_argument("--skills-dir", default="skills",
                         help="Path to development skills directory")
     parser.add_argument("--staging-dir", default=None,
                         help="Path to staging skills directory")
-    parser.add_argument("--prod-dir", default=str(Path.home() / ".hermes" / "skills" / "evolutionary-self-dev"),
+    parser.add_argument("--prod-dir", default=str(Path.home() / ".hermes" / "skills" / "esra"),
                         help="Path to production skills directory")
     parser.add_argument("--stage", action="store_true",
                         help="Perform staging validation and promotion/rollback")

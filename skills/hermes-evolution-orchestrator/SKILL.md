@@ -46,7 +46,7 @@ You are the central conductor that turns Hermes' native learning loop into a del
 
 ## Integration with Hermes Native Learning Loop
 - **Hook point**: After Hermes finishes a complex task and performs its autonomous skill creation/improvement.
-- **Non-invasive**: Lives in `optional-skills/evolutionary-self-dev/`. Does not modify core Hermes code.
+- **Non-invasive**: Lives in `skills/`. Does not modify core Hermes code.
 - **Recommended trigger in AGENTS.md**:
   ```
   After any complex task or when Hermes autonomously creates/improves a skill:
@@ -86,4 +86,4 @@ This turns random skill evolution into deliberate, compounding Evolutionary Self
 - Add automatic scheduling of loop-auditor every N cycles.
 - Create visual or structured reports of evolution progress.
 - Allow user to define custom orchestration policies.
-- Deeper native integration of evolution-hook.py into Hermes.
+- Deeper native integration of evolution_hook.py into Hermes.

@@ -17,7 +17,7 @@
 
 ### Completed
 - [x] **hermes-evolution-orchestrator** — Central conductor for ESRA loop
-- [x] **evolution-hook.py** — Smart detector + rate limiting
+- [x] **evolution_hook.py** — Smart detector + rate limiting
 - [x] **ooda-framework** — O→O→D→A task structuring
 - [x] **self-observer** — Internal state monitoring
 - [x] **self-improver** — Systematic skill improvement
@@ -62,7 +62,7 @@
 - [x] Retention policy (30-day rolling history)
 
 #### 2.2 Evolution Dashboard
-- [x] Create `tools/evolution-dashboard.py` — Web UI or CLI visualization
+- [x] Create `tools/evolution_dashboard.py` — Web UI or CLI visualization
 - [x] Display metrics:
   - Cycle count and success rate
   - New skills created vs. skills improved
@@ -147,7 +147,7 @@
   - Orchestrator can suggest Hermes config changes (`suggest_config_changes`)
 
 #### 4.2 Automatic Evolution Triggering
-- [x] Embed evolution-hook.py logic directly in Hermes (`AutomaticEvolutionTrigger`)
+- [x] Embed evolution_hook.py logic directly in Hermes (`AutomaticEvolutionTrigger`)
 - [x] Remove manual invocation requirement for high-complexity tasks
 - [x] Configurable aggressiveness (how often to trigger: `low`, `medium`, `high`)
 
@@ -265,10 +265,10 @@
 ### Daily
 - Monitor ESRA logs for errors
 - Watch for crisis-manager alerts
-- Quick evolutionary checks via evolution-hook.py
+- Quick evolutionary checks via evolution_hook.py
 
 ### Weekly
-- Review evolution-dashboard
+- Review evolution_dashboard
 - Audit recent skill changes
 - Update AGENTS.md if new patterns emerge
 
@@ -311,7 +311,7 @@ By Phase 7 completion, Hermes will be:
 | Runaway optimization | Optimizer-philosopher constraints, staged rollouts |
 | Skill explosion | Archival system + genealogy limits |
 | Logging bloat | Retention policy + compression |
-| False positives in evolution-hook | Calibration against real task data |
+| False positives in evolution_hook | Calibration against real task data |
 
 ---
 
@@ -324,12 +324,12 @@ To help advance this roadmap:
    or `evolve/skill-name-vN` (for skill-evolution PRs, per `human_oversight.py`)
 3. Before major changes, run the current orchestrator:
    ```bash
-   python tools/evolution-hook.py
+   python tools/evolution_hook.py
    ```
 4. Submit PRs with evolution context in the description
 5. After merge, orchestrate evolution:
    ```bash
-   python tools/evolution-hook.py --force-cycle
+   python tools/evolution_hook.py --force-cycle
    ```
 
 ---
@@ -338,7 +338,7 @@ To help advance this roadmap:
 
 - **ESRA Specification:** https://github.com/rrpauls/esra
 - **Hermes Repository:** https://github.com/nousresearch/hermes
-- **Meta-Skills:** `~/.hermes/skills/evolutionary-self-dev/`
+- **Meta-Skills:** `~/.hermes/skills/esra/`
 - **Evolution Logs:** `~/.hermes/evolution-logs/`
 - **Issue Tracker:** GitHub Issues (tagged `evolution`, `esra`, `skill-*`)
 
