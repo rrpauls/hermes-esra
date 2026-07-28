@@ -17,6 +17,43 @@ This turns ad-hoc improvements into a deliberate, auditable, and self-improving 
 
 ---
 
+## Install layout (where things live)
+
+After `./install.sh`, Hermes home looks like:
+
+```text
+$HERMES_HOME/                         # default: ~/.hermes
+├── AGENTS.md                         # this file
+├── skills/esra/                      # meta-skills (Hermes skill discovery)
+│   ├── esra-runtime/                 # documents tool paths for the agent
+│   ├── hermes-evolution-orchestrator/
+│   └── …
+└── esra/                             # ESRA runtime package (not a skill)
+    ├── manifest.json                 # machine-readable paths
+    └── tools/                        # Python CLIs — use these paths
+```
+
+| Kind | Path | Discovered by Hermes as |
+|------|------|-------------------------|
+| Meta-skills | `~/.hermes/skills/esra/` | Skills / slash commands |
+| Runtime tools | `~/.hermes/esra/tools/` | Via `esra-runtime` skill + this file |
+| Manifest | `~/.hermes/esra/manifest.json` | Read when paths are unclear |
+
+Override roots with `$HERMES_HOME` and/or `$ESRA_HOME` if set.
+
+**Always run tools by installed absolute path** (do not depend on a git clone or cwd):
+
+```bash
+python ~/.hermes/esra/tools/evolution_hook.py
+python ~/.hermes/esra/tools/evolution_hook.py --force-cycle
+python ~/.hermes/esra/tools/skill_validator.py --verbose --skills-dir ~/.hermes/skills/esra
+python ~/.hermes/esra/tools/evolution_dashboard.py
+```
+
+If unsure, activate the **`esra-runtime`** skill or open `~/.hermes/esra/manifest.json`.
+
+---
+
 ## How to Run the Orchestrator
 
 ### Recommended Triggers
@@ -35,7 +72,7 @@ perform evolutionary audit of this task
 
 ### Smart Triggering via `evolution_hook.py`
 
-The helper tool `tools/evolution_hook.py` analyzes task context and evolution history to decide when to launch the orchestrator.
+The helper at `~/.hermes/esra/tools/evolution_hook.py` analyzes task context and evolution history to decide when to launch the orchestrator.
 
 **Capabilities:**
 - Considers task complexity, new skill creation, and result confidence
@@ -45,7 +82,8 @@ The helper tool `tools/evolution_hook.py` analyzes task context and evolution hi
 
 **Usage:**
 ```bash
-python tools/evolution_hook.py
+python ~/.hermes/esra/tools/evolution_hook.py
+python ~/.hermes/esra/tools/evolution_hook.py --force-cycle
 ```
 
 ---
@@ -74,6 +112,7 @@ All skills live in: `~/.hermes/skills/esra/`
 
 | Skill | Purpose |
 |-------|---------|
+| `esra-runtime` | **Where tools live** — installed paths and how to run them |
 | `hermes-evolution-orchestrator` | Central conductor of the ESRA loop |
 | `ooda-framework` | Structures work using Observe → Orient → Decide → Act |
 | `self-observer` | Honest monitoring of internal state and patterns |
@@ -89,7 +128,7 @@ All skills live in: `~/.hermes/skills/esra/`
 | `hermes-codebase-engineer` | Programming and integration work inside Hermes |
 | `github-actions-integrator` | CI/CD workflow creation and GitHub Actions automation |
 
-### Supporting tools (`tools/`)
+### Supporting tools (`~/.hermes/esra/tools/`)
 
 | Tool | Purpose |
 |------|---------|
@@ -101,6 +140,7 @@ All skills live in: `~/.hermes/skills/esra/`
 | `experiment_runner.py` | Safe experiment lifecycle (canary, staged, A/B) |
 | `hermes_integration.py` | Native Hermes hooks, skill injection, feedback loop |
 | `human_oversight.py` | GitHub issues/PRs and evolutionary audit trail helpers |
+| `esra_paths.py` | Shared path resolution for tools and install layout |
 
 ---
 
@@ -113,7 +153,14 @@ chmod +x install.sh
 ./install.sh
 ```
 
-This copies all skills to `~/.hermes/skills/esra/` and places `AGENTS.md` into `~/.hermes/`.
+This installs:
+
+1. Meta-skills → `~/.hermes/skills/esra/` (including `esra-runtime`)
+2. Tools package → `~/.hermes/esra/tools/`
+3. Manifest → `~/.hermes/esra/manifest.json`
+4. This file → `~/.hermes/AGENTS.md`
+
+Respects `$HERMES_HOME` / `$ESRA_HOME` when set.
 
 ---
 
@@ -122,6 +169,7 @@ This copies all skills to `~/.hermes/skills/esra/` and places `AGENTS.md` into `
 - Hermes provides a powerful **engine** for self-improvement.
 - ESRA provides the **steering, brakes, navigation, and audit system**.
 - `hermes-evolution-orchestrator` is the mechanism that connects them.
+- Skills are discovered by Hermes; tools are a **package under Hermes home**, advertised by `esra-runtime`.
 
 The goal is not merely to add skills, but to make the evolution process itself **recursive and self-improving**.
 

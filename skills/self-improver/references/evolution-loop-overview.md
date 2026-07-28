@@ -82,16 +82,19 @@ Domain specialists (`hermes-codebase-engineer`, `github-actions-integrator`, `cr
 
 ## Supporting Tools
 
+**Installed path:** `~/.hermes/esra/tools/` (see `esra-runtime` skill and `~/.hermes/esra/manifest.json`)
+
 | Tool | Role |
 |------|------|
-| `tools/evolution_hook.py` | Decides when to run the orchestrator |
-| `tools/esra_logger.py` | Structured cycle logging |
-| `tools/evolution_dashboard.py` | Metrics visualization |
-| `tools/baseline_metrics.py` | KPI snapshots |
-| `tools/skill_validator.py` | Skill validation and promotion |
-| `tools/experiment_runner.py` | Experiment lifecycle |
-| `tools/hermes_integration.py` | Native Hermes hooks and skill injection |
-| `tools/human_oversight.py` | Human audit trail (issues/PRs) |
+| `evolution_hook.py` | Decides when to run the orchestrator |
+| `esra_logger.py` | Structured cycle logging |
+| `evolution_dashboard.py` | Metrics visualization |
+| `baseline_metrics.py` | KPI snapshots |
+| `skill_validator.py` | Skill validation and promotion |
+| `experiment_runner.py` | Experiment lifecycle |
+| `hermes_integration.py` | Native Hermes hooks and skill injection |
+| `human_oversight.py` | Human audit trail (issues/PRs) |
+| `esra_paths.py` | Shared Hermes/ESRA path resolution |
 
 ## Purpose
 

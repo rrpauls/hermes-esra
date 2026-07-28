@@ -51,20 +51,26 @@ chmod +x install.sh
 ./install.sh
 ```
 
-**What `install.sh` does:**
-- Copies all meta-skills into `~/.hermes/skills/esra/`
-- Copies `AGENTS.md` to `~/.hermes/AGENTS.md`
+**What `install.sh` does** (Hermes-aligned layout):
 
-**What it does not do:** tools stay in this repository. Run them from a clone:
+| Installs | Destination | Why |
+|----------|-------------|-----|
+| Meta-skills | `~/.hermes/skills/esra/` | Hermes discovers skills only under `~/.hermes/skills/` |
+| Runtime tools | `~/.hermes/esra/tools/` | Shared Python package with stable absolute paths |
+| Manifest | `~/.hermes/esra/manifest.json` | Machine-readable inventory for the agent |
+| `AGENTS.md` | `~/.hermes/AGENTS.md` | Triggers + path docs Hermes loads as instructions |
+| `esra-runtime` skill | under `skills/esra/` | Teaches Hermes **where** tools live |
+
+After install, restart Hermes (or use `/skills`), then run tools by **installed path** (no git clone required):
 
 ```bash
-python tools/evolution_hook.py              # demo heuristics
-python tools/evolution_hook.py --force-cycle  # force a full ESRA cycle prompt
-python tools/skill_validator.py --verbose     # validate skill frontmatter + DAG
-python tools/evolution_dashboard.py           # evolution metrics (CLI)
+python ~/.hermes/esra/tools/evolution_hook.py
+python ~/.hermes/esra/tools/evolution_hook.py --force-cycle
+python ~/.hermes/esra/tools/skill_validator.py --verbose --skills-dir ~/.hermes/skills/esra
+python ~/.hermes/esra/tools/evolution_dashboard.py
 ```
 
-After install, restart Hermes (or use `/skills`) so the new skills load.
+Respects `$HERMES_HOME` / `$ESRA_HOME`. From a source checkout you can still use `python tools/…`.
 
 ---
 
@@ -100,12 +106,13 @@ loop-auditor
 
 ---
 
-## Meta-skills (14)
+## Meta-skills (15)
 
 Installed under `~/.hermes/skills/esra/`:
 
 | Skill | Role |
 |-------|------|
+| `esra-runtime` | Documents installed tool paths; use when locating/running ESRA CLIs |
 | `hermes-evolution-orchestrator` | Central conductor of the ESRA loop |
 | `ooda-framework` | Observe → Orient → Decide → Act structuring |
 | `self-observer` | Honest monitoring of internal state and patterns |
@@ -125,16 +132,21 @@ Installed under `~/.hermes/skills/esra/`:
 
 ## Supporting tools
 
+**Installed at:** `~/.hermes/esra/tools/` (source tree: `tools/`)
+
 | Tool | Purpose |
 |------|---------|
-| `tools/evolution_hook.py` | Smart trigger: complexity, new skills, confidence, rate limits |
-| `tools/esra_logger.py` | Structured JSON logs under `~/.hermes/evolution-logs/` |
-| `tools/evolution_dashboard.py` | CLI view of cycle metrics and recent history |
-| `tools/baseline_metrics.py` | KPI tracking and snapshots |
-| `tools/skill_validator.py` | Frontmatter, branding, dependency DAG, stage/promote |
-| `tools/experiment_runner.py` | Canary, staged, A/B, and stress experiment lifecycle |
-| `tools/hermes_integration.py` | Post-task hooks, skill injection, config feedback |
-| `tools/human_oversight.py` | GitHub issues/PRs and `evolve/skill-name-vN` branches |
+| `evolution_hook.py` | Smart trigger: complexity, new skills, confidence, rate limits |
+| `esra_logger.py` | Structured JSON logs under `~/.hermes/evolution-logs/` |
+| `evolution_dashboard.py` | CLI view of cycle metrics and recent history |
+| `baseline_metrics.py` | KPI tracking and snapshots |
+| `skill_validator.py` | Frontmatter, branding, dependency DAG, stage/promote |
+| `experiment_runner.py` | Canary, staged, A/B, and stress experiment lifecycle |
+| `hermes_integration.py` | Post-task hooks, skill injection, config feedback |
+| `human_oversight.py` | GitHub issues/PRs and `evolve/skill-name-vN` branches |
+| `esra_paths.py` | Shared Hermes/ESRA path resolution |
+
+Tools are **not** Hermes built-in toolsets. They are a package under Hermes home; Hermes finds them through `esra-runtime` + `AGENTS.md` + `manifest.json`.
 
 ---
 
@@ -154,6 +166,9 @@ PYTHONPATH=. pytest
 
 # Syntax-check all tools
 python -m py_compile tools/*.py
+
+# Optional: install into Hermes home (or a temp profile)
+HERMES_HOME=/tmp/hermes-test ./install.sh
 ```
 
 Continuous integration (`.github/workflows/ci.yml`) validates tool syntax, skill metadata/DAG, unit/integration/stress tests, frontmatter, branding, and `install.sh` executability.
@@ -164,12 +179,12 @@ Continuous integration (`.github/workflows/ci.yml`) validates tool syntax, skill
 
 ```
 hermes-esra/
-├── AGENTS.md              # Triggers and instructions for Hermes
+├── AGENTS.md              # Triggers, layout, and tool paths for Hermes
 ├── ROADMAP.md             # Phases 1–5 complete; 6–7 planned
-├── install.sh             # Install skills + AGENTS.md into ~/.hermes
+├── install.sh             # Install skills + tools package into $HERMES_HOME
 ├── assets/logo.png
-├── skills/                # 14 ESRA meta-skills (SKILL.md each)
-├── tools/                 # Hook, logging, metrics, validation, integration
+├── skills/                # 15 ESRA skills (incl. esra-runtime)
+├── tools/                 # Runtime package (copied to ~/.hermes/esra/tools/)
 └── tests/                 # Unit, integration, scenario, and stress tests
 ```
 
@@ -190,7 +205,10 @@ Keeping the conceptual core separate allows other agents and engines to implemen
 
 1. Prefer branches `feature/…` for roadmap work or `evolve/skill-name-vN` for skill evolution (see `tools/human_oversight.py`).
 2. Before larger changes: `python tools/skill_validator.py` and `PYTHONPATH=. pytest`.
-3. After significant work, run an ESRA cycle: `python tools/evolution_hook.py --force-cycle` or trigger `hermes-evolution-orchestrator` in Hermes.
+3. After significant work, run an ESRA cycle:
+   `python ~/.hermes/esra/tools/evolution_hook.py --force-cycle`
+   (or `python tools/evolution_hook.py --force-cycle` from a checkout)
+   or trigger `hermes-evolution-orchestrator` in Hermes.
 
 Details and phase plan: **[ROADMAP.md](ROADMAP.md)**.
 

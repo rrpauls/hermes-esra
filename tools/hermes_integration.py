@@ -16,6 +16,18 @@ from typing import Any, Dict, List, Optional
 from datetime import datetime, timezone
 
 try:
+    from tools.esra_paths import ensure_tools_on_syspath
+
+    ensure_tools_on_syspath()
+except ImportError:
+    try:
+        from esra_paths import ensure_tools_on_syspath
+
+        ensure_tools_on_syspath()
+    except ImportError:
+        pass
+
+try:
     from tools.evolution_hook import EvolutionHook
 except ImportError:
     from evolution_hook import EvolutionHook

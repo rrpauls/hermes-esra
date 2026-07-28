@@ -35,7 +35,7 @@
 - [x] **Installation script** — Automated skill deployment
 
 ### Metrics
-- 14 meta-skills operational
+- 15 skills operational (14 meta-skills + esra-runtime path bridge)
 - Zero unplanned ESRA cycle terminations
 - Orchestrator after complex tasks; loop-auditor every 5–10 cycles
 
@@ -324,12 +324,13 @@ To help advance this roadmap:
    or `evolve/skill-name-vN` (for skill-evolution PRs, per `human_oversight.py`)
 3. Before major changes, run the current orchestrator:
    ```bash
-   python tools/evolution_hook.py
+   python ~/.hermes/esra/tools/evolution_hook.py
+   # or from a source checkout: python tools/evolution_hook.py
    ```
 4. Submit PRs with evolution context in the description
 5. After merge, orchestrate evolution:
    ```bash
-   python tools/evolution_hook.py --force-cycle
+   python ~/.hermes/esra/tools/evolution_hook.py --force-cycle
    ```
 
 ---
@@ -339,6 +340,7 @@ To help advance this roadmap:
 - **ESRA Specification:** https://github.com/rrpauls/esra
 - **Hermes Repository:** https://github.com/nousresearch/hermes
 - **Meta-Skills:** `~/.hermes/skills/esra/`
+- **ESRA tools:** `~/.hermes/esra/tools/` (manifest: `~/.hermes/esra/manifest.json`)
 - **Evolution Logs:** `~/.hermes/evolution-logs/`
 - **Issue Tracker:** GitHub Issues (tagged `evolution`, `esra`, `skill-*`)
 

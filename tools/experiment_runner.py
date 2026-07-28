@@ -573,7 +573,11 @@ def main():
             print("=" * 70)
             print(f"\n{CLR_YELLOW}💡 No experiments have been defined yet.{CLR_RESET}")
             print("Create your first experiment using:")
-            print(f"  {CLR_BOLD}python tools/experiment_runner.py create --name ...{CLR_RESET}\n")
+            try:
+                from tools.esra_paths import tool_invocation
+            except ImportError:
+                from esra_paths import tool_invocation
+            print(f"  {CLR_BOLD}{tool_invocation('experiment_runner.py')} create --name ...{CLR_RESET}\n")
             print("=" * 70)
             sys.exit(0)
 
@@ -591,7 +595,15 @@ def main():
     elif args.command == "run":
         if not runner.load_experiment(args.id):
             print(f"{CLR_RED}Error: Experiment '{args.id}' not found.{CLR_RESET}", file=sys.stderr)
-            print(f"{CLR_YELLOW}💡 Tip: Run 'python tools/experiment_runner.py list' to view available experiments.{CLR_RESET}", file=sys.stderr)
+            try:
+                from tools.esra_paths import tool_invocation
+            except ImportError:
+                from esra_paths import tool_invocation
+            print(
+                f"{CLR_YELLOW}💡 Tip: Run '{tool_invocation('experiment_runner.py')} list' "
+                f"to view available experiments.{CLR_RESET}",
+                file=sys.stderr,
+            )
             sys.exit(1)
 
         try:
@@ -623,8 +635,12 @@ def main():
                     print(f"  Average Latency:          {metrics.get('avg_latency_sec', 0.0):.2f}s")
                     print(f"  Average Error Rate:       {metrics.get('avg_error_rate', 0.0) * 100:.2f}%")
 
+            try:
+                from tools.esra_paths import tool_invocation
+            except ImportError:
+                from esra_paths import tool_invocation
             print(f"\nGenerate a detailed markdown report with:")
-            print(f"  {CLR_BOLD}python tools/experiment_runner.py report --id {args.id}{CLR_RESET}")
+            print(f"  {CLR_BOLD}{tool_invocation('experiment_runner.py')} report --id {args.id}{CLR_RESET}")
 
         except ValueError as e:
             print(f"{CLR_RED}Error: {e}{CLR_RESET}", file=sys.stderr)
@@ -654,7 +670,15 @@ def main():
         exp = runner.load_experiment(args.id)
         if not exp:
             print(f"{CLR_RED}Error: Experiment '{args.id}' not found.{CLR_RESET}", file=sys.stderr)
-            print(f"{CLR_YELLOW}💡 Tip: Run 'python tools/experiment_runner.py list' to view available experiments.{CLR_RESET}", file=sys.stderr)
+            try:
+                from tools.esra_paths import tool_invocation
+            except ImportError:
+                from esra_paths import tool_invocation
+            print(
+                f"{CLR_YELLOW}💡 Tip: Run '{tool_invocation('experiment_runner.py')} list' "
+                f"to view available experiments.{CLR_RESET}",
+                file=sys.stderr,
+            )
             sys.exit(1)
 
         report = ExperimentRunner.generate_markdown_report(exp)

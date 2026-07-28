@@ -48,7 +48,8 @@ def test_display_dashboard_empty(capsys):
         captured = capsys.readouterr()
         assert "ESRA Evolution Dashboard" in captured.out
         assert "💡 No evolution cycles have been recorded yet." in captured.out
-        assert "python tools/evolution_hook.py" in captured.out
+        assert "evolution_hook.py" in captured.out
+        assert "python " in captured.out
 
 def test_display_dashboard_populated(capsys):
     with tempfile.TemporaryDirectory() as tmpdir:

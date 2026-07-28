@@ -14,10 +14,11 @@ Purpose:
 This script is designed to be called after significant work.
 It can also serve as a reference for native Hermes event hooks.
 
-Usage:
-- Manual: python tools/evolution_hook.py
-- Force an ESRA cycle regardless of heuristics: python tools/evolution_hook.py --force-cycle
-- From AGENTS.md / post-task instructions
+Usage (after install — preferred absolute paths):
+- Manual: python ~/.hermes/esra/tools/evolution_hook.py
+- Force cycle: python ~/.hermes/esra/tools/evolution_hook.py --force-cycle
+- From source checkout: python tools/evolution_hook.py
+- From AGENTS.md / esra-runtime skill / post-task instructions
 - Future: as a native Hermes tool or background watcher
 
 Author: ESRA
@@ -212,7 +213,7 @@ Save important insights to persistent memory.
     def trigger_force_cycle(self, task_context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
         Force an ESRA evolution cycle regardless of heuristics or rate limiting.
-        Invoked via: python tools/evolution_hook.py --force-cycle
+        Invoked via: python ~/.hermes/esra/tools/evolution_hook.py --force-cycle
         """
         ctx = task_context or {
             "summary": "Forced evolution cycle (manual trigger via --force-cycle)",

@@ -1,98 +1,163 @@
 #!/bin/bash
 #
 # install.sh
-# Automatic installation of ESRA meta-skills into Hermes Agent
+# Install ESRA meta-skills + runtime tools into the Hermes agent home.
 #
 # Usage:
-#   1. Clone this repo: git clone https://github.com/rrpauls/hermes-esra.git
+#   1. Clone: git clone https://github.com/rrpauls/hermes-esra.git
 #   2. cd hermes-esra
 #   3. ./install.sh
 #
-# The script copies all meta-skills from skills/
-# into ~/.hermes/skills/esra/
+# Layout written (Hermes-aligned):
+#   $HERMES_HOME/skills/esra/   — meta-skills (Hermes discovers these)
+#   $HERMES_HOME/esra/tools/    — Python tools package (stable absolute paths)
+#   $HERMES_HOME/esra/manifest.json
+#   $HERMES_HOME/AGENTS.md
 #
-# After installation:
-#   - Restart Hermes or use the /skills command in chat
-#   - AGENTS.md will be automatically copied (see below)
+# Env:
+#   HERMES_HOME  — Hermes profile root (default: ~/.hermes)
+#   ESRA_HOME    — override ESRA package root (default: $HERMES_HOME/esra)
 #
 
-set -e
+set -euo pipefail
 
 echo "=========================================="
-echo "  Hermes ESRA Skills Installer"
+echo "  Hermes ESRA Installer"
 echo "=========================================="
 echo
 
 # Resolve paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_DIR="$SCRIPT_DIR/skills"
-DEST_DIR="$HOME/.hermes/skills/esra"
+SOURCE_SKILLS="$SCRIPT_DIR/skills"
+SOURCE_TOOLS="$SCRIPT_DIR/tools"
 AGENTS_SOURCE="$SCRIPT_DIR/AGENTS.md"
-AGENTS_DEST="$HOME/.hermes/AGENTS.md"
 
-# Check that the source directory exists
-if [ ! -d "$SOURCE_DIR" ]; then
-    echo "❌ Error: Skills directory not found: $SOURCE_DIR"
-    echo "   Make sure you are running the script from the repository root."
+HERMES_HOME="${HERMES_HOME:-$HOME/.hermes}"
+ESRA_HOME="${ESRA_HOME:-$HERMES_HOME/esra}"
+SKILLS_DEST="$HERMES_HOME/skills/esra"
+TOOLS_DEST="$ESRA_HOME/tools"
+AGENTS_DEST="$HERMES_HOME/AGENTS.md"
+MANIFEST_DEST="$ESRA_HOME/manifest.json"
+
+# Validate sources
+if [ ! -d "$SOURCE_SKILLS" ]; then
+    echo "❌ Error: Skills directory not found: $SOURCE_SKILLS"
+    echo "   Run this script from the hermes-esra repository root (or via path to install.sh)."
     exit 1
 fi
 
-echo "📁 Skills source: $SOURCE_DIR"
-echo "📁 Destination:     $DEST_DIR"
-echo
-
-# Create destination directory if it doesn't exist
-if [ ! -d "$DEST_DIR" ]; then
-    echo "📂 Creating directory $DEST_DIR..."
-    mkdir -p "$DEST_DIR"
-else
-    echo "📂 Directory already exists. Will perform update."
+if [ ! -d "$SOURCE_TOOLS" ]; then
+    echo "❌ Error: Tools directory not found: $SOURCE_TOOLS"
+    exit 1
 fi
 
-# Copy all skills
-echo "📦 Copying skills..."
-cp -r "$SOURCE_DIR"/* "$DEST_DIR"/
+echo "📁 HERMES_HOME:   $HERMES_HOME"
+echo "📁 ESRA_HOME:     $ESRA_HOME"
+echo "📁 Skills →       $SKILLS_DEST"
+echo "📁 Tools  →       $TOOLS_DEST"
+echo
 
-echo "✅ Skills copied successfully!"
+# Create directories with restricted permissions when new
+mkdir -p "$SKILLS_DEST"
+mkdir -p "$TOOLS_DEST"
+chmod 700 "$HERMES_HOME" 2>/dev/null || true
+chmod 700 "$ESRA_HOME" 2>/dev/null || true
 
-# Copy AGENTS.md (if exists)
+# --- Skills (Hermes discovery tree) ---
+echo "📦 Installing meta-skills → $SKILLS_DEST"
+# Refresh skill tree: copy each skill directory (keeps sibling categories intact)
+for skill_path in "$SOURCE_SKILLS"/*/; do
+    [ -d "$skill_path" ] || continue
+    name="$(basename "$skill_path")"
+    rm -rf "${SKILLS_DEST:?}/$name"
+    cp -R "$skill_path" "$SKILLS_DEST/$name"
+done
+echo "✅ Skills installed"
+
+# --- Tools (ESRA package under Hermes home) ---
+echo "📦 Installing tools → $TOOLS_DEST"
+# Replace tools package cleanly so deleted files do not linger
+if [ -d "$TOOLS_DEST" ]; then
+    find "$TOOLS_DEST" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+fi
+cp -R "$SOURCE_TOOLS"/. "$TOOLS_DEST"/
+# Drop bytecode caches if any were copied
+find "$TOOLS_DEST" -type d -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true
+find "$TOOLS_DEST" -type f -name '*.pyc' -delete 2>/dev/null || true
+chmod 755 "$TOOLS_DEST"/*.py 2>/dev/null || true
+echo "✅ Tools installed"
+
+# --- Manifest (machine-readable paths for Hermes + tools) ---
+echo "📄 Writing manifest → $MANIFEST_DEST"
+INSTALLED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || date -u)"
+TOOLS_JSON="["
+first=1
+for f in "$TOOLS_DEST"/*.py; do
+    [ -f "$f" ] || continue
+    name="$(basename "$f")"
+    # Skip package markers from the public tool inventory
+    [ "$name" = "__init__.py" ] && continue
+    if [ "$first" -eq 1 ]; then
+        TOOLS_JSON="${TOOLS_JSON}\"${name}\""
+        first=0
+    else
+        TOOLS_JSON="${TOOLS_JSON}, \"${name}\""
+    fi
+done
+TOOLS_JSON="${TOOLS_JSON}]"
+cat > "$MANIFEST_DEST" <<EOF
+{
+  "name": "hermes-esra",
+  "version": "1.2",
+  "installed_at": "$INSTALLED_AT",
+  "hermes_home": "$HERMES_HOME",
+  "esra_home": "$ESRA_HOME",
+  "skills_dir": "$SKILLS_DEST",
+  "tools_dir": "$TOOLS_DEST",
+  "agents_md": "$AGENTS_DEST",
+  "tools": ${TOOLS_JSON}
+}
+EOF
+chmod 600 "$MANIFEST_DEST" 2>/dev/null || true
+echo "✅ Manifest written"
+
+# --- AGENTS.md (with installed tool path section injected if template markers exist) ---
 if [ -f "$AGENTS_SOURCE" ]; then
-    echo "📄 Copying AGENTS.md..."
+    echo "📄 Installing AGENTS.md → $AGENTS_DEST"
     cp "$AGENTS_SOURCE" "$AGENTS_DEST"
-    echo "✅ AGENTS.md copied to $AGENTS_DEST"
+    chmod 600 "$AGENTS_DEST" 2>/dev/null || true
+    echo "✅ AGENTS.md installed"
 else
     echo "⚠️  AGENTS.md not found in the repository (skipping)"
 fi
-echo
 
-# List installed skills
+echo
 echo "📋 Installed ESRA skills:"
-ls -1 "$DEST_DIR" | sed 's/^/   - /'
+ls -1 "$SKILLS_DEST" | sed 's/^/   - /'
+echo
+echo "🔧 Installed ESRA tools:"
+ls -1 "$TOOLS_DEST"/*.py 2>/dev/null | xargs -n1 basename | sed 's/^/   - /'
 echo
 
-# Integration recommendations
 echo "=========================================="
 echo "  Next Steps"
 echo "=========================================="
 echo
-
 echo "1. Restart Hermes (or use /skills in chat to refresh)."
 echo
-
-echo "2. AGENTS.md has been automatically copied to:"
-echo "   $AGENTS_DEST"
+echo "2. Hermes can discover tools via the esra-runtime skill, or run:"
+echo "   python $TOOLS_DEST/evolution_hook.py"
+echo "   python $TOOLS_DEST/evolution_hook.py --force-cycle"
+echo "   python $TOOLS_DEST/skill_validator.py --verbose --skills-dir $SKILLS_DEST"
 echo
-
-echo "   It contains ready-to-use instructions and triggers for running"
-echo "   hermes-evolution-orchestrator after complex tasks."
+echo "3. Paths are recorded in:"
+echo "   $MANIFEST_DEST"
 echo
-
-echo "3. Recommended first tests:"
-echo "   - Activate 'hermes-evolution-orchestrator' manually"
-echo "   - Try 'ooda-framework' on any uncertain decision"
-echo "   - Run 'loop-auditor' to audit the current cycle"
+echo "4. Recommended first tests in Hermes:"
+echo "   - Activate 'esra-runtime' (where tools live)"
+echo "   - Activate 'hermes-evolution-orchestrator'"
+echo "   - Try 'ooda-framework' on an uncertain decision"
 echo
-
 echo "=========================================="
 echo "  Installation completed successfully!"
 echo "=========================================="
