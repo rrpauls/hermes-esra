@@ -24,7 +24,7 @@ jobs:
 
       - name: Validate Python syntax
         run: |
-          python -m py_compile tools/evolution-hook.py
+          python -m py_compile tools/evolution_hook.py
           python -m py_compile tools/skill_validator.py
           echo "✅ tools syntax OK"
 
@@ -42,7 +42,7 @@ jobs:
         run: |
           echo "Checking ESRA meta-skills..."
           missing=0
-          for skill in optional-skills/evolutionary-self-dev/*/; do
+          for skill in skills/*/; do
             name=$(basename "$skill")
             if [ -f "${skill}SKILL.md" ]; then
               echo "✅ $name"
@@ -58,7 +58,7 @@ jobs:
       - name: Validate SKILL.md frontmatter (basic)
         run: |
           echo "Validating frontmatter..."
-          for skill in optional-skills/evolutionary-self-dev/*/SKILL.md; do
+          for skill in skills/*/SKILL.md; do
             name=$(basename $(dirname "$skill"))
             if grep -q "^name:" "$skill" && grep -q "^description:" "$skill"; then
               echo "✅ $name has name + description"
@@ -72,7 +72,7 @@ jobs:
         run: |
           echo "Checking for forbidden old branding..."
           if grep -r -i --include="*.md" -E "Evolutionary Self-Development Architecture|ESDA[^R]|Self-Development Architecture" \
-               README.md AGENTS.md optional-skills/ tools/ 2>/dev/null; then
+               README.md AGENTS.md skills/ tools/ 2>/dev/null; then
             echo "❌ Found residual old branding. Please update to ESRA."
             exit 1
           else
@@ -89,10 +89,10 @@ jobs:
 
       - name: Verify install script
         run: |
-          if [ -x "install-evolutionary-skills.sh" ]; then
-            echo "✅ install-evolutionary-skills.sh is executable"
+          if [ -x "install.sh" ]; then
+            echo "✅ install.sh is executable"
           else
-            echo "❌ install-evolutionary-skills.sh is not executable"
+            echo "❌ install.sh is not executable"
             exit 1
           fi
 

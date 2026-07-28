@@ -33,9 +33,9 @@ improve the self-development cycle
 perform evolutionary audit of this task
 ```
 
-### Smart Triggering via `evolution-hook.py`
+### Smart Triggering via `evolution_hook.py`
 
-The helper tool `tools/evolution-hook.py` analyzes task context and evolution history to decide when to launch the orchestrator.
+The helper tool `tools/evolution_hook.py` analyzes task context and evolution history to decide when to launch the orchestrator.
 
 **Capabilities:**
 - Considers task complexity, new skill creation, and result confidence
@@ -45,7 +45,7 @@ The helper tool `tools/evolution-hook.py` analyzes task context and evolution hi
 
 **Usage:**
 ```bash
-python tools/evolution-hook.py
+python tools/evolution_hook.py
 ```
 
 ---
@@ -62,12 +62,12 @@ Run loop-auditor to audit the current evolutionary cycle
 
 ## Installed ESRA Meta-Skills
 
-All skills live in: `~/.hermes/skills/evolutionary-self-dev/`
+All skills live in: `~/.hermes/skills/esra/`
 
 | Skill | Purpose |
 |-------|---------|
 | `hermes-evolution-orchestrator` | Central conductor of the ESRA loop |
-| `evolution-hook.py` (tools/) | Smart detector + history analysis for triggering |
+| `evolution_hook.py` (tools/) | Smart detector + history analysis for triggering |
 | `ooda-framework` | Structures work using Observe → Orient → Decide → Act |
 | `self-observer` | Honest monitoring of internal state and patterns |
 | `self-improver` | Systematic improvement of skills and processes |
@@ -89,11 +89,11 @@ All skills live in: `~/.hermes/skills/evolutionary-self-dev/`
 From the root of this repository:
 
 ```bash
-chmod +x install-evolutionary-skills.sh
-./install-evolutionary-skills.sh
+chmod +x install.sh
+./install.sh
 ```
 
-This copies all skills to `~/.hermes/skills/evolutionary-self-dev/` and places `AGENTS.md` into `~/.hermes/`.
+This copies all skills to `~/.hermes/skills/esra/` and places `AGENTS.md` into `~/.hermes/`.
 
 ---
 

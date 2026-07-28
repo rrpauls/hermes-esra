@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-evolution-hook.py
+evolution_hook.py
 
 Smart trigger for the ESRA (Evolutionary Self-Recursive Architecture) process inside Hermes.
 
@@ -15,12 +15,12 @@ This script is designed to be called after significant work.
 It can also serve as a reference for native Hermes event hooks.
 
 Usage:
-- Manual: python tools/evolution-hook.py
-- Force an ESRA cycle regardless of heuristics: python tools/evolution-hook.py --force-cycle
+- Manual: python tools/evolution_hook.py
+- Force an ESRA cycle regardless of heuristics: python tools/evolution_hook.py --force-cycle
 - From AGENTS.md / post-task instructions
 - Future: as a native Hermes tool or background watcher
 
-Author: ESRA / hermes-evolutionary-self-dev
+Author: ESRA
 """
 
 from __future__ import annotations
@@ -211,7 +211,7 @@ Save important insights to persistent memory.
     def trigger_force_cycle(self, task_context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
         Force an ESRA evolution cycle regardless of heuristics or rate limiting.
-        Invoked via: python tools/evolution-hook.py --force-cycle
+        Invoked via: python tools/evolution_hook.py --force-cycle
         """
         ctx = task_context or {
             "summary": "Forced evolution cycle (manual trigger via --force-cycle)",

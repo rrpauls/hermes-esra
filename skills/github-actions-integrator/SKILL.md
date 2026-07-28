@@ -1,6 +1,6 @@
 ---
 name: github-actions-integrator
-description: Activate github-actions-integrator when the task involves GitHub Actions workflows, CI/CD pipelines, triggering builds, checking workflow status, analyzing build results, or integrating GitHub Actions into the self-development process. Works especially well with hermes-codebase-engineer and evolution-hook.py. Triggered by GitHub Actions, workflow, CI/CD, trigger build, check workflow, GitHub Actions status or similar.
+description: Activate github-actions-integrator when the task involves GitHub Actions workflows, CI/CD pipelines, triggering builds, checking workflow status, analyzing build results, or integrating GitHub Actions into the self-development process. Works especially well with hermes-codebase-engineer and evolution_hook.py. Triggered by GitHub Actions, workflow, CI/CD, trigger build, check workflow, GitHub Actions status or similar.
 ---
 
 # GitHub Actions Integrator
@@ -12,7 +12,7 @@ You are a specialist in GitHub Actions and CI/CD automation. You help integrate 
 - Working with or creating GitHub Actions workflows (`.github/workflows/`)
 - Needing to trigger, monitor, or analyze CI/CD pipelines
 - After code changes that should be validated through automated workflows
-- When using `evolution-hook.py` or `hermes-codebase-engineer` for changes that benefit from CI feedback
+- When using `evolution_hook.py` or `hermes-codebase-engineer` for changes that benefit from CI feedback
 - Debugging failed workflows or improving CI processes
 
 ## Core Capabilities
@@ -28,7 +28,7 @@ You are a specialist in GitHub Actions and CI/CD automation. You help integrate 
 - Suggest how to use workflow outputs as feedback for the evolution process
 
 ### 3. Integration with ESRA Layer
-- Combine with `evolution-hook.py` to automatically trigger relevant workflows after significant changes
+- Combine with `evolution_hook.py` to automatically trigger relevant workflows after significant changes
 - Work with `hermes-codebase-engineer` when making code changes that should go through CI
 - Feed CI results back into `loop-auditor` and `mental-model-updater` for continuous improvement
 
@@ -40,7 +40,7 @@ You are a specialist in GitHub Actions and CI/CD automation. You help integrate 
 
 ## Recommended Integration Points
 
-- **With `evolution-hook.py`**: After detecting important changes, suggest or trigger relevant GitHub Actions workflows for validation.
+- **With `evolution_hook.py`**: After detecting important changes, suggest or trigger relevant GitHub Actions workflows for validation.
 - **With `hermes-codebase-engineer`**: When modifying code or skills, ensure changes pass through appropriate CI checks.
 - **With `loop-auditor`**: Include CI/CD health and feedback quality in evolutionary audits.
 - **With `AGENTS.md`**: Document when and how to use GitHub Actions as part of the self-development cycle.
@@ -49,7 +49,7 @@ You are a specialist in GitHub Actions and CI/CD automation. You help integrate 
 
 ```text
 Create a GitHub Actions workflow to validate all SKILL.md files
-Trigger the CI workflow after updating evolution-hook.py
+Trigger the CI workflow after updating evolution_hook.py
 Analyze why the latest workflow run failed
 Design a CI pipeline that supports evolutionary skill development
 ```

@@ -15,18 +15,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 from datetime import datetime, timezone
 
-# Securely import EvolutionHook due to hyphen in filename
 try:
-    # If package is absolute
-    evolution_hook = importlib.import_module("tools.evolution-hook")
-except ModuleNotFoundError:
-    try:
-        # Fallback if executing from tools dir
-        evolution_hook = importlib.import_module("evolution-hook")
-    except ModuleNotFoundError:
-        evolution_hook = None
-
-EvolutionHook = evolution_hook.EvolutionHook if evolution_hook else None
+    from tools.evolution_hook import EvolutionHook
+except ImportError:
+    from evolution_hook import EvolutionHook
 
 
 class HermesPluginInterface:
@@ -167,7 +159,7 @@ class SkillInjector:
     Enables skill hot-reloading, side-by-side versioning of skills, and A/B testing of skill variants.
     """
     def __init__(self, skills_dir: Optional[Path] = None):
-        self.skills_dir = Path(skills_dir or Path.home() / ".hermes" / "skills" / "evolutionary-self-dev")
+        self.skills_dir = Path(skills_dir or Path.home() / ".hermes" / "skills" / "esra")
         self.skills_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
 
     def hot_reload_skill(self, skill_name: str) -> bool:
