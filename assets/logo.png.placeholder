@@ -1,0 +1,8 @@
+This is a placeholder file. The repository README references assets/logo.png. To include the attached logo image in the README, replace this placeholder with the actual image file named `logo.png` in the same directory.
+
+Steps to add the actual image (if you want me to do it, provide the image binary or base64):
+
+1. Upload the image binary to `assets/logo.png` using the GitHub web UI, or
+2. Provide the image as base64 in a message and I will commit it for you.
+
+Filename to use: assets/logo.png

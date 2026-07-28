@@ -1,5 +1,7 @@
 # hermes-esra
 
+<p align="center"><img src="assets/logo.png" alt="hermes-esra logo" width="240"/></p>
+
 **Hermes implementation of ESRA — Evolutionary Self-Recursive Architecture**
 
 This repository contains the production-grade implementation of ESRA as a set of meta-skills, an orchestrator, and supporting tools for the Hermes agent.
@@ -33,7 +35,7 @@ This repository adds a **meta-layer** that makes evolution:
 
 ### Included meta-skills
 
-`hermes-evolution-orchestrator`, `self-observer`, `self-improver`, `value-clarifier`, `experimenter`, `mental-model-updater`, `antifragility-builder`, `optimizer-philosopher`, `system-dynamics-thinker`, `ooda-framework`, `crisis-manager`, `loop-auditor`, `hermes-codebase-engineer`, `github-actions-integrator`
+`hermes-evolution-orchestrator`, `self-observer`, `self-improver`, `value-clarifier`, `experimenter`, `mental-model-updater`, `antifragility-builder`, `optimizer-philosopher`, `system-dynamics-thi[...]`
 
 ---
 
