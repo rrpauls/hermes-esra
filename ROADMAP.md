@@ -30,6 +30,7 @@
 - [x] **system-dynamics-thinker** — Feedback modeling
 - [x] **crisis-manager** — High-stakes reasoning
 - [x] **hermes-codebase-engineer** — Native Hermes integration
+- [x] **github-actions-integrator** — CI/CD workflow automation
 - [x] **AGENTS.md** — Official meta-skill documentation
 - [x] **Installation script** — Automated skill deployment
 
@@ -319,7 +320,8 @@ By Phase 7 completion, Hermes will be:
 To help advance this roadmap:
 
 1. Pick a phase and work item that aligns with your expertise
-2. Create a branch: `feature/phase-N-item-name`
+2. Create a branch: `feature/phase-N-item-name` (for roadmap contributions)  
+   or `evolve/skill-name-vN` (for skill-evolution PRs, per `human_oversight.py`)
 3. Before major changes, run the current orchestrator:
    ```bash
    python tools/evolution-hook.py
@@ -335,13 +337,13 @@ To help advance this roadmap:
 ## Quick Links
 
 - **ESRA Specification:** https://github.com/rrpauls/esra
-- **Hermes Repository:** https://github.com/nousresearch
+- **Hermes Repository:** https://github.com/nousresearch/hermes
 - **Meta-Skills:** `~/.hermes/skills/evolutionary-self-dev/`
 - **Evolution Logs:** `~/.hermes/evolution-logs/`
 - **Issue Tracker:** GitHub Issues (tagged `evolution`, `esra`, `skill-*`)
 
 ---
 
-**Roadmap Version:** 1.0
+**Roadmap Version:** 1.2
 **Next Review:** Q3 2026
 **Maintained by:** rrpauls + Contributors

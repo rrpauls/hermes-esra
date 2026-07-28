@@ -16,6 +16,7 @@ It can also serve as a reference for native Hermes event hooks.
 
 Usage:
 - Manual: python tools/evolution-hook.py
+- Force an ESRA cycle regardless of heuristics: python tools/evolution-hook.py --force-cycle
 - From AGENTS.md / post-task instructions
 - Future: as a native Hermes tool or background watcher
 
@@ -207,6 +208,31 @@ Save important insights to persistent memory.
 
         return result
 
+    def trigger_force_cycle(self, task_context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        Force an ESRA evolution cycle regardless of heuristics or rate limiting.
+        Invoked via: python tools/evolution-hook.py --force-cycle
+        """
+        ctx = task_context or {
+            "summary": "Forced evolution cycle (manual trigger via --force-cycle)",
+            "complexity": 0,
+            "explicit_evolution_request": True,
+        }
+        ctx["explicit_evolution_request"] = True
+
+        prompt = self.build_orchestrator_prompt(ctx)
+        result = {
+            "timestamp": datetime.now().isoformat(),
+            "trigger_decision": True,
+            "forced": True,
+            "task_context": ctx,
+            "triggered": True,
+            "orchestrator_prompt": prompt,
+            "recommended_action": "Run hermes-evolution-orchestrator with the provided prompt",
+        }
+        self.record_evolution_event(result)
+        return result
+
     # ------------------------------------------------------------------
     # Future extension points
     # ------------------------------------------------------------------
@@ -222,13 +248,11 @@ Save important insights to persistent memory.
 
 
 # ----------------------------------------------------------------------
-# Example usage / testing
+# CLI entry point
 # ----------------------------------------------------------------------
 
-if __name__ == "__main__":
-    hook = EvolutionHook()
-
-    # Example 1: Complex task that created a new skill
+def _run_demos(hook: EvolutionHook):
+    """Run the built-in example tasks (default when no flags are given)."""
     example_task_1 = {
         "summary": "Implemented a complex multi-step integration between Hermes and an external API",
         "complexity": 8,
@@ -243,7 +267,6 @@ if __name__ == "__main__":
     result_1 = hook.trigger_orchestrator(example_task_1)
     print(json.dumps(result_1, indent=2, ensure_ascii=False))
 
-    # Example 2: Low confidence / struggle
     example_task_2 = {
         "summary": "Attempted to solve a non-standard problem with uncertain outcome",
         "complexity": 6,
@@ -257,7 +280,29 @@ if __name__ == "__main__":
     result_2 = hook.trigger_orchestrator(example_task_2)
     print(json.dumps(result_2, indent=2, ensure_ascii=False))
 
-    # Pattern analysis demo
     print("\n=== Recent pattern analysis ===")
     patterns = hook.analyze_recent_patterns(limit=10)
     print(json.dumps(patterns, indent=2, ensure_ascii=False))
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Smart trigger for the ESRA evolution process inside Hermes.",
+    )
+    parser.add_argument(
+        "--force-cycle",
+        action="store_true",
+        help="Force an ESRA evolution cycle regardless of heuristics or rate limiting.",
+    )
+    args = parser.parse_args()
+
+    hook = EvolutionHook()
+
+    if args.force_cycle:
+        result = hook.trigger_force_cycle()
+        print("=== Forced ESRA cycle ===")
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+    else:
+        _run_demos(hook)
