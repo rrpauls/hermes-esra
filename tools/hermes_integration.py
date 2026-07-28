@@ -81,7 +81,7 @@ class HermesPluginInterface:
             "python_version": sys.version,
             # ⚡ BOLT OPTIMIZATION: Use generator to avoid materializing list in memory
             "loaded_skills_count": sum(1 for _ in (self.hermes_home / "skills").rglob("*.md")) if (self.hermes_home / "skills").exists() else 0,
-            "active_plugins": ["esra-logger", "evolution-hook", "hermes-plugin-interface"]
+            "active_plugins": ["esra_logger", "evolution_hook", "hermes_integration"]
         }
 
     def suggest_config_changes(self, changes: Dict[str, Any]) -> Path:

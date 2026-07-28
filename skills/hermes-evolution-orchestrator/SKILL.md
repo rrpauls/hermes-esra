@@ -11,7 +11,7 @@ You are the central conductor that turns Hermes' native learning loop into a del
 ## When This Skill Activates
 - Immediately after Hermes autonomous skill creation or improvement from complex tasks.
 - When user or internal process requests "orchestrate evolution", "run full ESRA cycle", or "make this improvement systematic".
-- Periodically (suggested: after every 3–5 significant cycles or on explicit trigger).
+- After any complex task (see AGENTS.md core rule); schedule **loop-auditor** every 5–10 significant cycles.
 - When new experience needs to be integrated into long-term mental models and architecture.
 
 ## Core Orchestration Process (OODA-powered)
@@ -59,10 +59,12 @@ You are the central conductor that turns Hermes' native learning loop into a del
 ## Recommended Default Sequence (can be customized)
 1. hermes-evolution-orchestrator (this skill)
 2. ooda-framework (structure the improvement)
-3. self-improver + mental-model-updater
-4. experimenter (if testing needed)
-5. loop-auditor (periodic, not every time)
+3. self-observer → value-clarifier (mandatory gate before experiments)
+4. self-improver + mental-model-updater (with optimizer-philosopher / system-dynamics-thinker as needed)
+5. experimenter (only after value-clarifier sign-off, if testing needed)
 6. antifragility-builder (when relevant)
+7. loop-auditor (every 5–10 significant cycles, not every run)
+8. hermes-codebase-engineer / github-actions-integrator / crisis-manager (when domain requires)
 
 ## Key Principles
 - **Make the implicit explicit**: Hermes already improves — we make the improvement process itself improvable, auditable, and wise.

@@ -41,7 +41,8 @@ class EvolutionHook:
 
     def __init__(self, hermes_home: Optional[Path] = None):
         self.hermes_home = hermes_home or Path.home() / ".hermes"
-        self.skills_dir = self.hermes_home / "skills"
+        # Match install.sh / SkillInjector production path: ~/.hermes/skills/esra/
+        self.skills_dir = self.hermes_home / "skills" / "esra"
         self.memory_dir = self.hermes_home / "memory"
         self.history_file = self.hermes_home / "evolution_history.json"
         self._ensure_history_file()
@@ -238,8 +239,8 @@ Save important insights to persistent memory.
     # ------------------------------------------------------------------
 
     def watch_skills_directory(self):
-        """Placeholder for a file watcher on ~/.hermes/skills/."""
-        print("Skills directory watching is not yet implemented.")
+        """Placeholder for a file watcher on ~/.hermes/skills/esra/."""
+        print(f"Skills directory watching is not yet implemented (target: {self.skills_dir}).")
         print("Possible implementations: watchdog, inotify, or polling.")
 
     def integrate_as_hermes_tool(self):

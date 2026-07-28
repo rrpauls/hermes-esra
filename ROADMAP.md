@@ -2,8 +2,8 @@
 
 **Goal:** Establish Hermes as a self-improving agent through systematic integration of the Evolutionary Self-Recursive Architecture (ESRA).
 
-**Current Status:** v1.2 (Core ESRA Meta-Skills Installed)
-**Last Updated:** 19 July 2026
+**Current Status:** v1.2 (Phases 1–5 complete; Phase 6 planned)
+**Last Updated:** 28 July 2026
 
 ---
 
@@ -37,11 +37,11 @@
 ### Metrics
 - 14 meta-skills operational
 - Zero unplanned ESRA cycle terminations
-- Repeatable orchestrator invocation every 5–10 cycles
+- Orchestrator after complex tasks; loop-auditor every 5–10 cycles
 
 ---
 
-## Phase 2: Observability & Feedback (IN PROGRESS)
+## Phase 2: Observability & Feedback ✓ (COMPLETE)
 
 ### Objectives
 - Build comprehensive logging & audit trails
@@ -106,7 +106,7 @@
 - [x] Target: 80%+ coverage per skill
 
 #### 3.2 Skill Validation Framework
-- [x] `tools/skill-validator.py` — Automated checks:
+- [x] `tools/skill_validator.py` — Automated checks:
   - Syntax correctness
   - Required inputs available
   - Output schema compliance

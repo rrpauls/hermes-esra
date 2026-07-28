@@ -30,10 +30,13 @@ This repository adds a **meta-layer** that makes evolution:
 | `hermes-evolution-orchestrator` | Central conductor of evolution. Connects Hermes native loop with meta-skills | `skills/` |
 | `evolution_hook.py` | Smart task detector + history/pattern analysis. Decides when to run the orchestrator | `tools/` |
 | `loop-auditor` | Meta-audit of the entire evolutionary process | `skills/` |
+| `esra_logger.py` / `evolution_dashboard.py` / `baseline_metrics.py` | Cycle logging, metrics UI, KPI snapshots | `tools/` |
+| `skill_validator.py` / `experiment_runner.py` | Skill validation/promotion and experiment lifecycle | `tools/` |
+| `hermes_integration.py` / `human_oversight.py` | Native Hermes hooks and human audit trail | `tools/` |
 | `install.sh` | One-command installation of all skills + AGENTS.md | Root |
 | `AGENTS.md` | Ready-to-use instructions and triggers for Hermes | Root |
 
-### Included meta-skills
+### Included meta-skills (14)
 
 `hermes-evolution-orchestrator`, `self-observer`, `self-improver`, `value-clarifier`, `experimenter`, `mental-model-updater`, `antifragility-builder`, `optimizer-philosopher`, `system-dynamics-thi[...]`
 

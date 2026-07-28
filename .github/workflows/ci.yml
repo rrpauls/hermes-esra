@@ -24,9 +24,11 @@ jobs:
 
       - name: Validate Python syntax
         run: |
-          python -m py_compile tools/evolution_hook.py
-          python -m py_compile tools/skill_validator.py
-          echo "✅ tools syntax OK"
+          for f in tools/*.py; do
+            python -m py_compile "$f"
+            echo "✅ $f"
+          done
+          echo "✅ all tools syntax OK"
 
       - name: Validate ESRA skills metadata and DAG structure
         run: |

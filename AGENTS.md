@@ -50,6 +50,12 @@ python tools/evolution_hook.py
 
 ---
 
+## Decision Structuring
+
+For any uncertainty or important decision, run `ooda-framework` (optionally with related meta-skills such as `self-observer`, `value-clarifier`, or `loop-auditor`).
+
+---
+
 ## Periodic Audit
 
 Every **5–10 significant cycles** or after major changes, explicitly run:
@@ -60,14 +66,15 @@ Run loop-auditor to audit the current evolutionary cycle
 
 ---
 
-## Installed ESRA Meta-Skills
+## Installed ESRA Components
+
+### Meta-skills
 
 All skills live in: `~/.hermes/skills/esra/`
 
 | Skill | Purpose |
 |-------|---------|
 | `hermes-evolution-orchestrator` | Central conductor of the ESRA loop |
-| `evolution_hook.py` (tools/) | Smart detector + history analysis for triggering |
 | `ooda-framework` | Structures work using Observe → Orient → Decide → Act |
 | `self-observer` | Honest monitoring of internal state and patterns |
 | `self-improver` | Systematic improvement of skills and processes |
@@ -81,6 +88,19 @@ All skills live in: `~/.hermes/skills/esra/`
 | `crisis-manager` | High-stakes decision making under uncertainty |
 | `hermes-codebase-engineer` | Programming and integration work inside Hermes |
 | `github-actions-integrator` | CI/CD workflow creation and GitHub Actions automation |
+
+### Supporting tools (`tools/`)
+
+| Tool | Purpose |
+|------|---------|
+| `evolution_hook.py` | Smart detector + history analysis for triggering the orchestrator |
+| `esra_logger.py` | Structured JSON logging for ESRA cycles |
+| `evolution_dashboard.py` | CLI visualization of evolution metrics |
+| `baseline_metrics.py` | KPI tracking and historical snapshots |
+| `skill_validator.py` | Skill frontmatter, DAG, and promotion validation |
+| `experiment_runner.py` | Safe experiment lifecycle (canary, staged, A/B) |
+| `hermes_integration.py` | Native Hermes hooks, skill injection, feedback loop |
+| `human_oversight.py` | GitHub issues/PRs and evolutionary audit trail helpers |
 
 ---
 
@@ -117,5 +137,5 @@ The pure conceptual and technical description of the architecture (principles, 8
 ---
 
 **Version:** 1.2  
-**Date:** 19 July 2026  
+**Date:** 28 July 2026  
 **Compatible with:** Hermes Agent + ESRA (Evolutionary Self-Recursive Architecture)
