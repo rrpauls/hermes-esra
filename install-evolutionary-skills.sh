@@ -4,8 +4,8 @@
 # Automatic installation of Evolutionary Self-Development skills into Hermes Agent
 #
 # Usage:
-#   1. Clone the fork: git clone https://github.com/YOUR_USERNAME/hermes-evolutionary-self-dev.git
-#   2. cd hermes-evolutionary-self-dev
+#   1. Clone this repo: git clone https://github.com/rrpauls/hermes-esra.git
+#   2. cd hermes-esra
 #   3. ./install-evolutionary-skills.sh
 #
 # The script copies all meta-skills from optional-skills/evolutionary-self-dev/
@@ -34,7 +34,7 @@ AGENTS_DEST="$HOME/.hermes/AGENTS.md"
 # Check that the source directory exists
 if [ ! -d "$SOURCE_DIR" ]; then
     echo "❌ Error: Skills directory not found: $SOURCE_DIR"
-    echo "   Make sure you are running the script from the fork root."
+    echo "   Make sure you are running the script from the repository root."
     exit 1
 fi
 
@@ -62,7 +62,7 @@ if [ -f "$AGENTS_SOURCE" ]; then
     cp "$AGENTS_SOURCE" "$AGENTS_DEST"
     echo "✅ AGENTS.md copied to $AGENTS_DEST"
 else
-    echo "⚠️  AGENTS.md not found in the fork (skipping)"
+    echo "⚠️  AGENTS.md not found in the repository (skipping)"
 fi
 echo
 
@@ -76,19 +76,24 @@ echo "=========================================="
 echo "  Next Steps"
 echo "=========================================="
 echo
+
 echo "1. Restart Hermes (or use /skills in chat to refresh)."
 echo
+
 echo "2. AGENTS.md has been automatically copied to:"
 echo "   $AGENTS_DEST"
 echo
+
 echo "   It contains ready-to-use instructions and triggers for running"
 echo "   hermes-evolution-orchestrator after complex tasks."
 echo
+
 echo "3. Recommended first tests:"
 echo "   - Activate 'hermes-evolution-orchestrator' manually"
 echo "   - Try 'ooda-framework' on any uncertain decision"
 echo "   - Run 'loop-auditor' to audit the current cycle"
 echo
+
 echo "=========================================="
 echo "  Installation completed successfully!"
 echo "=========================================="
