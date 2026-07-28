@@ -85,3 +85,19 @@ def test_hook_pattern_analysis():
         assert analysis["status"] == "ok"
         assert analysis["triggered_count"] == 5
         assert analysis["same_area_repeated"] is True
+
+def test_hook_force_cycle():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp_home = Path(tmpdir)
+        hook = EvolutionHook(hermes_home=tmp_home)
+
+        result = hook.trigger_force_cycle()
+        assert result["trigger_decision"] is True
+        assert result["forced"] is True
+        assert result["triggered"] is True
+        assert "orchestrator_prompt" in result
+
+        # Verify the event was recorded in history
+        history = hook.load_history(limit=10)
+        assert len(history) == 1
+        assert history[0]["forced"] is True

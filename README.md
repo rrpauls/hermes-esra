@@ -33,7 +33,7 @@ This repository adds a **meta-layer** that makes evolution:
 
 ### Included meta-skills
 
-`self-observer`, `self-improver`, `value-clarifier`, `experimenter`, `mental-model-updater`, `antifragility-builder`, `optimizer-philosopher`, `system-dynamics-thinker`, `ooda-framework`, `crisis-[...]`
+`hermes-evolution-orchestrator`, `self-observer`, `self-improver`, `value-clarifier`, `experimenter`, `mental-model-updater`, `antifragility-builder`, `optimizer-philosopher`, `system-dynamics-thinker`, `ooda-framework`, `crisis-manager`, `loop-auditor`, `hermes-codebase-engineer`, `github-actions-integrator`
 
 ---
 
@@ -79,4 +79,5 @@ This separation keeps the conceptual core clean and allows other implementations
 ---
 
 **Status:** Active (July 2026)  
+**Version:** 1.2  
 This repository implements ESRA for Hermes.

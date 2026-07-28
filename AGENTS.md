@@ -80,6 +80,7 @@ All skills live in: `~/.hermes/skills/evolutionary-self-dev/`
 | `system-dynamics-thinker` | Feedback loops, stocks & flows, leverage points |
 | `crisis-manager` | High-stakes decision making under uncertainty |
 | `hermes-codebase-engineer` | Programming and integration work inside Hermes |
+| `github-actions-integrator` | CI/CD workflow creation and GitHub Actions automation |
 
 ---
 
