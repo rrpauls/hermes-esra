@@ -229,6 +229,7 @@ def stage_and_promote(skills_src: Path, staging_dir: Path, prod_dir: Path, verbo
     CLR_BOLD = "\033[1m" if use_color else ""
     CLR_CYAN = "\033[36m" if use_color else ""
     CLR_GREEN = "\033[32m" if use_color else ""
+    CLR_YELLOW = "\033[33m" if use_color else ""
     CLR_RED = "\033[31m" if use_color else ""
 
     print("=" * 60)
@@ -268,6 +269,7 @@ def stage_and_promote(skills_src: Path, staging_dir: Path, prod_dir: Path, verbo
             print(f"  [{skill_name}]:", file=sys.stderr)
             for err in errs:
                 print(f"    - {err}", file=sys.stderr)
+        print(f"{CLR_YELLOW}💡 Tip: Check your SKILL.md syntax, verify required fields (name, description), and resolve any missing dependencies.{CLR_RESET}", file=sys.stderr)
         shutil.rmtree(staging_dir)
         return False
 
@@ -334,6 +336,7 @@ def main():
     use_color = sys.stdout.isatty() and "NO_COLOR" not in os.environ
     CLR_RESET = "\033[0m" if use_color else ""
     CLR_GREEN = "\033[32m" if use_color else ""
+    CLR_YELLOW = "\033[33m" if use_color else ""
     CLR_RED = "\033[31m" if use_color else ""
 
     parser = argparse.ArgumentParser(description="ESRA Skill Validation & Promotion Utility")
@@ -373,6 +376,7 @@ def main():
                 print(f"  [{skill_name}]:", file=sys.stderr)
                 for err in errs:
                     print(f"    - {err}", file=sys.stderr)
+            print(f"{CLR_YELLOW}💡 Tip: Check if --skills-dir is correct and that SKILL.md files contain valid YAML frontmatter with required fields.{CLR_RESET}", file=sys.stderr)
             sys.exit(1)
 
 
