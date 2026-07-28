@@ -82,9 +82,9 @@ Hermes native learning loop
         │  after complex task / skill creation
         ▼
 evolution_hook.py  ── analyzes context, confidence, history ──┐
-        │                                                       │
-        │  trigger?                                             │ skip
-        ▼                                                       ▼
+        │                                                     │
+        │  trigger?                                           │ skip
+        ▼                                                     ▼
 hermes-evolution-orchestrator                          (no action)
         │
         ▼
