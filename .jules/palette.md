@@ -13,3 +13,6 @@ This journal documents critical UX and accessibility learnings from working with
 ## 2026-07-27 - [Actionable Error States in CLI Tools]
 **Learning:** Returning unhelpful error messages (e.g., "Experiment not found") in CLI tools leads to dead-ends. When a user provides an invalid ID or malformed configuration, they are left guessing how to resolve it. Without clear next steps, users abandon flows.
 **Action:** Always complement error states with a highly visible `💡 Tip:` offering an actionable command to resolve the issue (e.g., suggesting a command to list available IDs).
+## 2026-07-28 - Actionable Error Tooltips
+**Learning:** CLI error messages are dead-ends without guidance. Simple failure messages leave users confused about what to fix next, resulting in bad Developer Experience (DX).
+**Action:** When printing error states in CLI tools (like validation failures), complement the error with a highly visible `💡 Tip:` that offers specific, actionable guidance on how to fix the issue.
