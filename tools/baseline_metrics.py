@@ -58,24 +58,30 @@ class BaselineMetrics:
         if not self.logs_dir.exists():
             return metrics
 
-        logs = []
+        # ⚡ BOLT OPTIMIZATION: Process log files iteratively to avoid O(N) memory allocation from appending all JSON objects to a list
+        total_cycles_analyzed = 0
+        tasks_succeeded = 0
+
         for filepath in self.logs_dir.glob("*.json"):
             try:
                 with open(filepath, "r", encoding="utf-8") as f:
-                    logs.append(json.load(f))
+                    log = json.load(f)
+                    total_cycles_analyzed += 1
+
+                    # Dummy logic for calculation based on what we can find in logs
+                    # In a real system, these would tie into complex evaluation skills.
+                    if log.get("outputs", {}).get("success", False):
+                        tasks_succeeded += 1
             except Exception:
                 pass
 
-        metrics["total_cycles_analyzed"] = len(logs)
+        metrics["total_cycles_analyzed"] = total_cycles_analyzed
 
-        if logs:
-            # Dummy logic for calculation based on what we can find in logs
-            # In a real system, these would tie into complex evaluation skills.
-            successes = sum(1 for log in logs if log.get("outputs", {}).get("success", False))
-            metrics["tasks_succeeded"] = successes
+        if total_cycles_analyzed > 0:
+            metrics["tasks_succeeded"] = tasks_succeeded
 
             # Simple assumption: 1 cycle per day if we only have a few logs
-            metrics["estimated_cycles_per_day"] = len(logs) / 1.0
+            metrics["estimated_cycles_per_day"] = total_cycles_analyzed / 1.0
 
         return metrics
 
