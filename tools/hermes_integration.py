@@ -16,21 +16,42 @@ from typing import Any, Dict, List, Optional
 from datetime import datetime, timezone
 
 try:
-    from tools.esra_paths import ensure_tools_on_syspath
+    from tools.esra_paths import (
+        ensure_tools_on_syspath,
+        is_safe_path_component,
+        require_safe_path_component,
+        secure_mkdir,
+    )
 
     ensure_tools_on_syspath()
 except ImportError:
     try:
-        from esra_paths import ensure_tools_on_syspath
+        from esra_paths import (
+            ensure_tools_on_syspath,
+            is_safe_path_component,
+            require_safe_path_component,
+            secure_mkdir,
+        )
 
         ensure_tools_on_syspath()
     except ImportError:
-        pass
+        is_safe_path_component = None  # type: ignore
+        require_safe_path_component = None  # type: ignore
+        secure_mkdir = None  # type: ignore
 
 try:
     from tools.evolution_hook import EvolutionHook
 except ImportError:
     from evolution_hook import EvolutionHook
+
+
+def _safe_component(name: str, label: str = "skill_name") -> str:
+    if require_safe_path_component is not None:
+        return require_safe_path_component(name, label=label)
+    # Minimal fallback if esra_paths is unavailable
+    if Path(name).name != name or name in {".", "..", ""}:
+        raise ValueError(f"Invalid {label}: {name!r}")
+    return name
 
 
 class HermesPluginInterface:
@@ -44,7 +65,14 @@ class HermesPluginInterface:
         self._ensure_directories()
 
     def _ensure_directories(self):
-        self.hermes_home.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if secure_mkdir is not None:
+            secure_mkdir(self.hermes_home, 0o700)
+        else:
+            self.hermes_home.mkdir(parents=True, exist_ok=True, mode=0o700)
+            try:
+                os.chmod(self.hermes_home, 0o700)
+            except OSError:
+                pass
 
     def post_task_hook(self, task_context: Dict[str, Any], result: Dict[str, Any], metrics: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -172,47 +200,65 @@ class SkillInjector:
     """
     def __init__(self, skills_dir: Optional[Path] = None):
         self.skills_dir = Path(skills_dir or Path.home() / ".hermes" / "skills" / "esra")
-        self.skills_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if secure_mkdir is not None:
+            secure_mkdir(self.skills_dir, 0o700)
+        else:
+            self.skills_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+            try:
+                os.chmod(self.skills_dir, 0o700)
+            except OSError:
+                pass
 
     def hot_reload_skill(self, skill_name: str) -> bool:
         """
-        Loads or reloads a skill dynamically into the current Python execution context.
+        Verifies a markdown skill exists under skills_dir for hot-reload.
+
+        Does **not** call importlib.import_module on attacker-controlled names
+        (that would allow loading arbitrary Python packages with side effects).
+        Only skills already present as ``tools.*`` modules in sys.modules may
+        be reloaded, and only when the name is a safe path component.
         """
-        # Security: Prevent path traversal
-        if Path(skill_name).name != skill_name:
-            print(f"Error hot-reloading skill: Invalid skill name format: {skill_name}", file=sys.stderr)
+        try:
+            name = _safe_component(skill_name, label="skill_name")
+        except ValueError as e:
+            print(f"Error hot-reloading skill: {e}", file=sys.stderr)
             return False
 
-        # If the skill represents a Python module in tools/ or skills/
-        # we try to locate and reload it using importlib.
-        try:
-            if skill_name in sys.modules:
-                importlib.reload(sys.modules[skill_name])
+        # Optional safe reload of already-imported ESRA tool modules only
+        module_key = f"tools.{name}" if not name.startswith("tools.") else name
+        if module_key in sys.modules and module_key.startswith("tools."):
+            try:
+                importlib.reload(sys.modules[module_key])
                 return True
-            else:
-                # Attempt to import it
-                importlib.import_module(skill_name)
-                return True
-        except Exception:
-            # For non-Python markdown skills, hot-reload means re-parsing the file.
-            # We verify the file exists and is valid.
-            skill_file = self.skills_dir / skill_name / "SKILL.md"
-            if not skill_file.exists():
-                # Fallback to direct name matching
-                skill_file = self.skills_dir / f"{skill_name}.md"
+            except Exception:
+                return False
 
-            return skill_file.exists()
+        # Markdown / directory skills under the skills tree
+        skill_file = self.skills_dir / name / "SKILL.md"
+        if skill_file.is_file() and not skill_file.is_symlink():
+            return True
+        skill_file = self.skills_dir / f"{name}.md"
+        return skill_file.is_file() and not skill_file.is_symlink()
 
     def version_skill(self, skill_name: str, code: str, version: int) -> Path:
         """
         Saves a copy of a skill with explicit versioning, allowing multiple variants to coexist.
         """
-        # Security: Prevent path traversal
-        if Path(skill_name).name != skill_name:
-            raise ValueError(f"Invalid skill name format: {skill_name}")
+        name = _safe_component(skill_name, label="skill_name")
+        if not isinstance(version, int) or isinstance(version, bool) or version < 1 or version > 10_000:
+            raise ValueError(f"Invalid version: {version!r}")
 
-        versioned_dir = self.skills_dir / f"{skill_name}-v{version}"
-        versioned_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+        versioned_dir = self.skills_dir / f"{name}-v{version}"
+        # Guard against any residual traversal after join
+        try:
+            versioned_dir.resolve().relative_to(self.skills_dir.resolve())
+        except ValueError as e:
+            raise ValueError(f"Invalid skill path for {name!r}") from e
+
+        if secure_mkdir is not None:
+            secure_mkdir(versioned_dir, 0o700)
+        else:
+            versioned_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
 
         skill_file = versioned_dir / "SKILL.md"
 
@@ -283,7 +329,14 @@ class ESRAFeedbackLoop:
     """
     def __init__(self, config_dir: Optional[Path] = None):
         self.config_dir = Path(config_dir or Path.home() / ".hermes" / "config")
-        self.config_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if secure_mkdir is not None:
+            secure_mkdir(self.config_dir, 0o700)
+        else:
+            self.config_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+            try:
+                os.chmod(self.config_dir, 0o700)
+            except OSError:
+                pass
         self.prompt_file = self.config_dir / "hermes_system_prompt.txt"
         self.trace_file = self.config_dir / "reasoning_trace.json"
 

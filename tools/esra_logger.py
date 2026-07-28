@@ -5,6 +5,14 @@ import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+try:
+    from tools.esra_paths import secure_mkdir
+except ImportError:
+    try:
+        from esra_paths import secure_mkdir
+    except ImportError:
+        secure_mkdir = None
+
 class ESRALogger:
     """
     Handles structured JSON logging for all ESRA orchestrator invocations.
@@ -16,7 +24,14 @@ class ESRALogger:
         else:
             self.log_dir = Path(log_dir)
 
-        self.log_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if secure_mkdir is not None:
+            secure_mkdir(self.log_dir, 0o700)
+        else:
+            self.log_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+            try:
+                os.chmod(self.log_dir, 0o700)
+            except OSError:
+                pass
         self.clean_old_logs()
 
     def log_cycle(self, input_state, decisions, outputs, duration_resources):

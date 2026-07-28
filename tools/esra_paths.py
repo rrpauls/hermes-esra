@@ -24,8 +24,77 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+# Single path component: no separators, no "." / "..", no empty names.
+_SAFE_COMPONENT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+_SAFE_EXPERIMENT_ID = re.compile(r"^EXP-\d{1,6}$")
+
+
+def is_safe_path_component(name: str) -> bool:
+    """True if name is a single safe filesystem path component."""
+    if not isinstance(name, str) or not name or name in {".", ".."}:
+        return False
+    if Path(name).name != name:
+        return False
+    return _SAFE_COMPONENT.fullmatch(name) is not None
+
+
+def require_safe_path_component(name: str, label: str = "name") -> str:
+    """Return name if safe, else raise ValueError (path-traversal / injection guard)."""
+    if not is_safe_path_component(name):
+        raise ValueError(f"Invalid {label}: {name!r} (expected a single safe path component)")
+    return name
+
+
+def is_safe_experiment_id(experiment_id: str) -> bool:
+    """True if experiment_id matches the EXP-NNN form used on disk."""
+    if not isinstance(experiment_id, str):
+        return False
+    if Path(experiment_id).name != experiment_id:
+        return False
+    return _SAFE_EXPERIMENT_ID.fullmatch(experiment_id) is not None
+
+
+def secure_mkdir(path: Path, mode: int = 0o700) -> Path:
+    """
+    Create directory with mode and re-apply chmod.
+
+    pathlib.mkdir(..., exist_ok=True) does not change mode of an existing
+    directory; always chmod after create so inherited world-writable dirs
+    are not left open.
+    """
+    path = Path(path)
+    path.mkdir(parents=True, exist_ok=True, mode=mode)
+    try:
+        os.chmod(path, mode)
+    except OSError:
+        pass
+    return path
+
+
+def assert_no_symlinks_in_tree(root: Path) -> None:
+    """
+    Refuse trees that contain symlinks (install/promote symlink attacks).
+
+    Does not follow links while walking.
+    """
+    root = Path(root)
+    if not root.exists():
+        return
+    if root.is_symlink():
+        raise ValueError(f"Refusing symlink path: {root}")
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
+        base = Path(dirpath)
+        # If a directory itself became a symlink mid-walk, refuse
+        if base.is_symlink():
+            raise ValueError(f"Refusing symlink directory: {base}")
+        for name in list(dirnames) + list(filenames):
+            p = base / name
+            if p.is_symlink():
+                raise ValueError(f"Refusing to process symlink: {p}")
 
 
 def hermes_home() -> Path:
@@ -87,7 +156,7 @@ def is_installed_layout() -> bool:
 
 
 def tool_path(name: str) -> Path:
-    """Absolute path to a tool script (e.g. evolution_hook.py)."""
+    """Absolute path to a tool script (e.g. evolution_hook.py). Clamps to basename."""
     base = Path(name).name  # prevent path traversal
     return tools_dir() / base
 

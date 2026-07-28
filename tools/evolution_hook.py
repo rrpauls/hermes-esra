@@ -33,6 +33,14 @@ from typing import Any, Dict, Optional, List
 from datetime import datetime
 from collections import Counter
 
+try:
+    from tools.esra_paths import secure_mkdir
+except ImportError:
+    try:
+        from esra_paths import secure_mkdir
+    except ImportError:
+        secure_mkdir = None
+
 
 class EvolutionHook:
     """
@@ -50,8 +58,14 @@ class EvolutionHook:
 
     def _ensure_history_file(self):
         """Create history file if it does not exist."""
-        if not self.history_file.parent.exists():
+        if secure_mkdir is not None:
+            secure_mkdir(self.history_file.parent, 0o700)
+        elif not self.history_file.parent.exists():
             self.history_file.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+            try:
+                os.chmod(self.history_file.parent, 0o700)
+            except OSError:
+                pass
 
         if not self.history_file.exists():
             fd = os.open(self.history_file, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)

@@ -12,11 +12,26 @@ from datetime import datetime
 import os
 import sys
 
+try:
+    from tools.esra_paths import secure_mkdir
+except ImportError:
+    try:
+        from esra_paths import secure_mkdir
+    except ImportError:
+        secure_mkdir = None
+
 class BaselineMetrics:
     def __init__(self, logs_dir=None, snapshots_dir=None):
         self.logs_dir = Path(logs_dir or Path.home() / ".hermes" / "evolution-logs")
         self.snapshots_dir = Path(snapshots_dir or Path.home() / ".hermes" / "metrics-snapshots")
-        self.snapshots_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if secure_mkdir is not None:
+            secure_mkdir(self.snapshots_dir, 0o700)
+        else:
+            self.snapshots_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+            try:
+                os.chmod(self.snapshots_dir, 0o700)
+            except OSError:
+                pass
 
     def define_kpis(self):
         """

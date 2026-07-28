@@ -17,6 +17,11 @@ from pathlib import Path
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
+try:
+    from tools.esra_paths import is_safe_experiment_id, secure_mkdir
+except ImportError:
+    from esra_paths import is_safe_experiment_id, secure_mkdir
+
 class Experiment:
     """Represents an ESRA Value-Driven Experiment."""
     def __init__(
@@ -93,11 +98,9 @@ class ExperimentRunner:
         self._ensure_directories()
 
     def _ensure_directories(self):
-        """Creates required directories securely with 0o700 permissions."""
-        self.base_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-        # Avoid modifying existing directories if they already exist, but ensure 0o700 on create
-        if not self.experiments_dir.exists():
-            self.experiments_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+        """Creates required directories securely with 0o700 permissions (re-chmod existing)."""
+        secure_mkdir(self.base_dir, 0o700)
+        secure_mkdir(self.experiments_dir, 0o700)
 
     def create_experiment(
         self,
@@ -134,20 +137,29 @@ class ExperimentRunner:
 
     def save_experiment(self, experiment: Experiment):
         """Saves experiment to disk using 0o600 file permissions."""
+        if not is_safe_experiment_id(experiment.experiment_id):
+            raise ValueError(f"Invalid experiment_id: {experiment.experiment_id!r}")
         filepath = self.experiments_dir / f"{experiment.experiment_id}.json"
+        # Ensure path stays under experiments_dir
+        filepath.resolve().relative_to(self.experiments_dir.resolve())
         fd = os.open(filepath, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
         with os.fdopen(fd, "w", encoding="utf-8") as f:
             json.dump(experiment.to_dict(), f, indent=2, ensure_ascii=False)
 
     def load_experiment(self, experiment_id: str) -> Optional[Experiment]:
         """Loads a specific experiment by ID."""
-        # Security: Prevent path traversal
-        if Path(experiment_id).name != experiment_id:
+        # Security: allowlist EXP-NNN only (blocks path traversal and odd filenames)
+        if not is_safe_experiment_id(experiment_id):
             print(f"Error loading experiment: Invalid experiment ID format: {experiment_id}", file=sys.stderr)
             return None
 
         filepath = self.experiments_dir / f"{experiment_id}.json"
-        if not filepath.exists():
+        try:
+            filepath.resolve().relative_to(self.experiments_dir.resolve())
+        except ValueError:
+            print(f"Error loading experiment: path escapes experiments dir: {experiment_id}", file=sys.stderr)
+            return None
+        if not filepath.is_file() or filepath.is_symlink():
             return None
         try:
             # ⚡ BOLT OPTIMIZATION: Use json.load with open() instead of json.loads(read_text()) to avoid buffering entire file contents in memory

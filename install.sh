@@ -57,11 +57,26 @@ echo "📁 Skills →       $SKILLS_DEST"
 echo "📁 Tools  →       $TOOLS_DEST"
 echo
 
-# Create directories with restricted permissions when new
+# Create directories with restricted permissions (re-apply even if they exist)
 mkdir -p "$SKILLS_DEST"
 mkdir -p "$TOOLS_DEST"
 chmod 700 "$HERMES_HOME" 2>/dev/null || true
 chmod 700 "$ESRA_HOME" 2>/dev/null || true
+chmod 700 "$HERMES_HOME/skills" 2>/dev/null || true
+chmod 700 "$SKILLS_DEST" 2>/dev/null || true
+chmod 700 "$TOOLS_DEST" 2>/dev/null || true
+
+# Refuse to install if the source tree contains symlinks (symlink copy attacks)
+if find "$SOURCE_SKILLS" -type l 2>/dev/null | grep -q .; then
+    echo "❌ Error: Refusing install — symlinks found under skills/ (security)."
+    find "$SOURCE_SKILLS" -type l 2>/dev/null | sed 's/^/   /'
+    exit 1
+fi
+if find "$SOURCE_TOOLS" -type l 2>/dev/null | grep -q .; then
+    echo "❌ Error: Refusing install — symlinks found under tools/ (security)."
+    find "$SOURCE_TOOLS" -type l 2>/dev/null | sed 's/^/   /'
+    exit 1
+fi
 
 # --- Skills (Hermes discovery tree) ---
 echo "📦 Installing meta-skills → $SKILLS_DEST"

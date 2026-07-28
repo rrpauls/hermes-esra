@@ -20,6 +20,15 @@ import heapq
 from pathlib import Path
 from typing import Dict, List, Set, Tuple, Optional
 
+try:
+    from tools.esra_paths import assert_no_symlinks_in_tree, secure_mkdir
+except ImportError:
+    try:
+        from esra_paths import assert_no_symlinks_in_tree, secure_mkdir
+    except ImportError:
+        assert_no_symlinks_in_tree = None  # type: ignore
+        secure_mkdir = None  # type: ignore
+
 # Try to import yaml, fallback to a basic parser if not available
 try:
     import yaml
@@ -240,21 +249,31 @@ def stage_and_promote(skills_src: Path, staging_dir: Path, prod_dir: Path, verbo
     staging_dir = Path(staging_dir)
     prod_dir = Path(prod_dir)
 
+    # Refuse symlink trees (prevents copy-follow into sensitive files)
+    if assert_no_symlinks_in_tree is not None:
+        assert_no_symlinks_in_tree(skills_src)
+
     # 1. Clean staging directory and copy source files there
-    if not staging_dir.exists():
+    if secure_mkdir is not None:
+        secure_mkdir(staging_dir, 0o700)
+    elif not staging_dir.exists():
         staging_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-    else:
-        # Securely empty directory instead of rmtree to avoid TOCTOU
+    # Securely empty directory instead of rmtree(parent) to avoid TOCTOU
+    if staging_dir.exists():
         for item in staging_dir.iterdir():
-            if item.is_dir():
+            if item.is_dir() and not item.is_symlink():
                 shutil.rmtree(item)
             else:
                 item.unlink()
 
     print(f"{CLR_BOLD}1. Copying skills from src '{skills_src}' to staging '{staging_dir}'...{CLR_RESET}")
     for item in skills_src.iterdir():
+        if item.is_symlink():
+            raise ValueError(f"Refusing to copy symlink: {item}")
         if item.is_dir() and not item.name.startswith("."):
-            shutil.copytree(item, staging_dir / item.name)
+            if assert_no_symlinks_in_tree is not None:
+                assert_no_symlinks_in_tree(item)
+            shutil.copytree(item, staging_dir / item.name, symlinks=False)
         elif item.is_file():
             shutil.copy2(item, staging_dir)
 
@@ -282,22 +301,25 @@ def stage_and_promote(skills_src: Path, staging_dir: Path, prod_dir: Path, verbo
     if prod_dir.exists():
         backup_dir = Path(tempfile.mkdtemp(prefix="prod_skills_backup_"))
         print(f"{CLR_BOLD}3. Backing up existing production directory to '{backup_dir}'...{CLR_RESET}")
-        shutil.copytree(prod_dir, backup_dir, dirs_exist_ok=True)
+        shutil.copytree(prod_dir, backup_dir, dirs_exist_ok=True, symlinks=False)
 
     # 4. Promote from staging to production
     try:
         print(f"{CLR_BOLD}4. Promoting skills from staging to production directory '{prod_dir}'...{CLR_RESET}")
-        if not prod_dir.exists():
+        if secure_mkdir is not None:
+            secure_mkdir(prod_dir, 0o700)
+        elif not prod_dir.exists():
             prod_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-        else:
-            for item in prod_dir.iterdir():
-                if item.is_dir():
-                    shutil.rmtree(item)
-                else:
-                    item.unlink()
+        for item in prod_dir.iterdir():
+            if item.is_dir() and not item.is_symlink():
+                shutil.rmtree(item)
+            else:
+                item.unlink()
         for item in staging_dir.iterdir():
+            if item.is_symlink():
+                raise ValueError(f"Refusing to promote symlink: {item}")
             if item.is_dir():
-                shutil.copytree(item, prod_dir / item.name)
+                shutil.copytree(item, prod_dir / item.name, symlinks=False)
             elif item.is_file():
                 shutil.copy2(item, prod_dir)
         print(f"✅ {CLR_GREEN}Promotion completed successfully!{CLR_RESET}")

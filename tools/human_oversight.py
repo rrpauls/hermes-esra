@@ -8,13 +8,19 @@ and helpers for enforcing branch naming conventions.
 """
 
 import os
+import re
 from pathlib import Path
 from datetime import datetime
+
+try:
+    from tools.esra_paths import is_safe_path_component, secure_mkdir
+except ImportError:
+    from esra_paths import is_safe_path_component, secure_mkdir
 
 class HumanOversight:
     def __init__(self, output_dir=None):
         self.output_dir = Path(output_dir or Path.home() / ".hermes" / "oversight-reports")
-        self.output_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+        secure_mkdir(self.output_dir, 0o700)
 
     def generate_crisis_issue_template(self, crisis_details):
         """
@@ -81,9 +87,19 @@ Please review this summary to ensure Hermes is evolving safely and remaining ali
     def format_pr_branch_name(skill_name, version=1):
         """
         Enforces the branch naming convention: evolve/skill-name-vN
+
+        Strips path separators and unsafe characters so the result cannot be
+        used for git path / ref injection (e.g. ``../`` or spaces).
         """
-        clean_name = skill_name.lower().replace(" ", "-").replace("_", "-")
-        return f"evolve/{clean_name}-v{version}"
+        if not isinstance(version, int) or isinstance(version, bool) or version < 1 or version > 10_000:
+            raise ValueError(f"Invalid version: {version!r}")
+        # Normalize to kebab-case, then allowlist
+        cleaned = skill_name.lower().replace("_", "-").replace(" ", "-")
+        cleaned = re.sub(r"[^a-z0-9.-]+", "-", cleaned)
+        cleaned = re.sub(r"-{2,}", "-", cleaned).strip("-.")
+        if not is_safe_path_component(cleaned):
+            raise ValueError(f"Invalid skill_name for branch: {skill_name!r}")
+        return f"evolve/{cleaned}-v{version}"
 
 
 if __name__ == "__main__":
