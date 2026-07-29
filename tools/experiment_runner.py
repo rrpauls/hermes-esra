@@ -114,6 +114,16 @@ class ExperimentRunner:
         stressors: Optional[List[str]] = None
     ) -> Experiment:
         """Creates a new experiment and saves it to disk securely (0o600)."""
+        # Security enhancement: Input length limits to prevent DoS
+        if len(name) > 100:
+            raise ValueError("Experiment name exceeds maximum length of 100 characters.")
+        if len(hypothesis) > 1000:
+            raise ValueError("Experiment hypothesis exceeds maximum length of 1000 characters.")
+        if len(theme) > 100:
+            raise ValueError("Experiment theme exceeds maximum length of 100 characters.")
+        if len(value_alignment_justification) > 1000:
+            raise ValueError("Experiment justification exceeds maximum length of 1000 characters.")
+
         # Generate ID
         # ⚡ BOLT OPTIMIZATION: Use generator to avoid materializing list in memory
         next_num = sum(1 for _ in self.experiments_dir.glob("EXP-*.json")) + 1
