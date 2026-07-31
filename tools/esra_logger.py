@@ -28,10 +28,11 @@ class ESRALogger:
             secure_mkdir(self.log_dir, 0o700)
         else:
             self.log_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-            try:
-                os.chmod(self.log_dir, 0o700)
-            except OSError:
-                pass
+            if not self.log_dir.is_symlink():
+                try:
+                    os.chmod(self.log_dir, 0o700)
+                except OSError:
+                    pass
         self.clean_old_logs()
 
     def log_cycle(self, input_state, decisions, outputs, duration_resources):
