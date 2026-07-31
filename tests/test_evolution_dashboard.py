@@ -27,7 +27,7 @@ def test_dashboard_aggregates():
         )
 
         dashboard = EvolutionDashboard(log_dir=tmpdir)
-        logs = dashboard.load_logs()
+        logs = list(dashboard.load_logs())
         assert len(logs) == 2
 
         metrics = dashboard.calculate_metrics(logs)
