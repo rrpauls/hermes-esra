@@ -69,10 +69,11 @@ class HermesPluginInterface:
             secure_mkdir(self.hermes_home, 0o700)
         else:
             self.hermes_home.mkdir(parents=True, exist_ok=True, mode=0o700)
-            try:
-                os.chmod(self.hermes_home, 0o700)
-            except OSError:
-                pass
+            if not self.hermes_home.is_symlink():
+                try:
+                    os.chmod(self.hermes_home, 0o700)
+                except OSError:
+                    pass
 
     def post_task_hook(self, task_context: Dict[str, Any], result: Dict[str, Any], metrics: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -204,10 +205,11 @@ class SkillInjector:
             secure_mkdir(self.skills_dir, 0o700)
         else:
             self.skills_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-            try:
-                os.chmod(self.skills_dir, 0o700)
-            except OSError:
-                pass
+            if not self.skills_dir.is_symlink():
+                try:
+                    os.chmod(self.skills_dir, 0o700)
+                except OSError:
+                    pass
 
     def hot_reload_skill(self, skill_name: str) -> bool:
         """
@@ -333,10 +335,11 @@ class ESRAFeedbackLoop:
             secure_mkdir(self.config_dir, 0o700)
         else:
             self.config_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-            try:
-                os.chmod(self.config_dir, 0o700)
-            except OSError:
-                pass
+            if not self.config_dir.is_symlink():
+                try:
+                    os.chmod(self.config_dir, 0o700)
+                except OSError:
+                    pass
         self.prompt_file = self.config_dir / "hermes_system_prompt.txt"
         self.trace_file = self.config_dir / "reasoning_trace.json"
 
