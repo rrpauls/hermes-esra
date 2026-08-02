@@ -70,7 +70,8 @@ class HermesPluginInterface:
         else:
             self.hermes_home.mkdir(parents=True, exist_ok=True, mode=0o700)
             try:
-                os.chmod(self.hermes_home, 0o700)
+                if not self.hermes_home.is_symlink():
+                    os.chmod(self.hermes_home, 0o700)
             except OSError:
                 pass
 
@@ -205,7 +206,8 @@ class SkillInjector:
         else:
             self.skills_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
             try:
-                os.chmod(self.skills_dir, 0o700)
+                if not self.skills_dir.is_symlink():
+                    os.chmod(self.skills_dir, 0o700)
             except OSError:
                 pass
 
@@ -334,7 +336,8 @@ class ESRAFeedbackLoop:
         else:
             self.config_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
             try:
-                os.chmod(self.config_dir, 0o700)
+                if not self.config_dir.is_symlink():
+                    os.chmod(self.config_dir, 0o700)
             except OSError:
                 pass
         self.prompt_file = self.config_dir / "hermes_system_prompt.txt"
