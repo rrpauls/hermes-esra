@@ -331,6 +331,7 @@ def stage_and_promote(skills_src: Path, staging_dir: Path, prod_dir: Path, verbo
         return True
     except Exception as e:
         print(f"❌ {CLR_RED}Critical error during promotion: {e}{CLR_RESET}", file=sys.stderr)
+        print(f"{CLR_YELLOW}💡 Tip: Check directory permissions for production and staging directories, and ensure sufficient disk space.{CLR_RESET}", file=sys.stderr)
         if backup_dir and backup_dir.exists():
             print(f"🔄 {CLR_BOLD}Attempting rollback to previous production state...{CLR_RESET}")
             if not prod_dir.exists():
