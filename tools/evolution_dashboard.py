@@ -14,21 +14,21 @@ class EvolutionDashboard:
             self.log_dir = Path(log_dir)
 
     def load_logs(self):
-        logs = []
         if not self.log_dir.exists():
-            return logs
+            return
 
         for filepath in sorted(self.log_dir.glob("*.json")):
             try:
                 with open(filepath, "r", encoding="utf-8") as f:
-                    logs.append(json.load(f))
+                    yield json.load(f)
             except Exception as e:
                 print(f"Warning: Could not read {filepath}: {e}", file=sys.stderr)
-        return logs
 
     def calculate_metrics(self, logs):
+        from collections import deque
+        # ⚡ BOLT OPTIMIZATION: Process log files iteratively to avoid O(N) memory allocation
         metrics = {
-            "total_cycles": len(logs),
+            "total_cycles": 0,
             "successful_cycles": 0,
             "success_rate": 0.0,
             "new_skills_created": 0,
@@ -37,12 +37,13 @@ class EvolutionDashboard:
             "anomalies_count": 0,
             "crisis_interventions_count": 0,
             "skill_genealogy": defaultdict(list),
+            # ⚡ BOLT OPTIMIZATION: Use collections.deque(maxlen=5) to maintain rolling buffer of recent items in O(1) memory
+            "recent_logs": deque(maxlen=5)
         }
 
-        if not logs:
-            return metrics
-
         for log in logs:
+            metrics["total_cycles"] += 1
+            metrics["recent_logs"].append(log)
             outputs = log.get("outputs", {})
             if outputs.get("success", False):
                 metrics["successful_cycles"] += 1
@@ -141,10 +142,11 @@ class EvolutionDashboard:
 
         print("-"*50)
         print(f"{CLR_BOLD}Recent Cycles (Last 5):{CLR_RESET}")
-        if not logs:
+        recent_logs = metrics.get("recent_logs", [])
+        if not recent_logs:
             print("  No cycle history available.")
         else:
-            for log in reversed(logs[-5:]):
+            for log in reversed(recent_logs):
                 timestamp = log.get("timestamp", "Unknown")
                 if "T" in timestamp:
                     timestamp = timestamp.split(".")[0].replace("T", " ")
