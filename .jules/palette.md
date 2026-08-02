@@ -16,3 +16,6 @@ This journal documents critical UX and accessibility learnings from working with
 ## 2026-07-28 - Actionable Error Tooltips
 **Learning:** CLI error messages are dead-ends without guidance. Simple failure messages leave users confused about what to fix next, resulting in bad Developer Experience (DX).
 **Action:** When printing error states in CLI tools (like validation failures), complement the error with a highly visible `💡 Tip:` that offers specific, actionable guidance on how to fix the issue.
+## 2026-08-02 - Comprehensive Actionable Error Tips in CLI
+**Learning:** Even if some CLI commands provide tips, inconsistent application across the codebase leaves users confused when they encounter edge case errors like malformed JSON input or missing environment variables.
+**Action:** When printing error states in CLI tools like `tools/experiment_runner.py` and `tools/skill_validator.py`, ensure all `sys.stderr` error messages are followed by a highly visible `💡 Tip:` offering specific guidance on resolving that particular issue.
