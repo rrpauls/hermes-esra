@@ -4,7 +4,7 @@ import sys
 import json
 import argparse
 from pathlib import Path
-from collections import defaultdict
+from collections import defaultdict, deque
 
 class EvolutionDashboard:
     def __init__(self, log_dir=None):
@@ -14,21 +14,20 @@ class EvolutionDashboard:
             self.log_dir = Path(log_dir)
 
     def load_logs(self):
-        logs = []
         if not self.log_dir.exists():
-            return logs
+            return
 
+        # ⚡ BOLT OPTIMIZATION: Process log files iteratively to avoid O(N) memory allocation
         for filepath in sorted(self.log_dir.glob("*.json")):
             try:
                 with open(filepath, "r", encoding="utf-8") as f:
-                    logs.append(json.load(f))
+                    yield json.load(f)
             except Exception as e:
                 print(f"Warning: Could not read {filepath}: {e}", file=sys.stderr)
-        return logs
 
     def calculate_metrics(self, logs):
         metrics = {
-            "total_cycles": len(logs),
+            "total_cycles": 0,
             "successful_cycles": 0,
             "success_rate": 0.0,
             "new_skills_created": 0,
@@ -39,10 +38,11 @@ class EvolutionDashboard:
             "skill_genealogy": defaultdict(list),
         }
 
-        if not logs:
-            return metrics
+        recent_logs = deque(maxlen=5)
 
         for log in logs:
+            metrics["total_cycles"] += 1
+            recent_logs.append(log)
             outputs = log.get("outputs", {})
             if outputs.get("success", False):
                 metrics["successful_cycles"] += 1
@@ -68,11 +68,11 @@ class EvolutionDashboard:
         if metrics["total_cycles"] > 0:
             metrics["success_rate"] = (metrics["successful_cycles"] / metrics["total_cycles"]) * 100
 
-        return metrics
+        return metrics, list(recent_logs)
 
     def display_dashboard(self):
         logs = self.load_logs()
-        metrics = self.calculate_metrics(logs)
+        metrics, recent_logs = self.calculate_metrics(logs)
 
         use_color = sys.stdout.isatty() and "NO_COLOR" not in os.environ
 
@@ -141,10 +141,10 @@ class EvolutionDashboard:
 
         print("-"*50)
         print(f"{CLR_BOLD}Recent Cycles (Last 5):{CLR_RESET}")
-        if not logs:
+        if not recent_logs:
             print("  No cycle history available.")
         else:
-            for log in reversed(logs[-5:]):
+            for log in reversed(recent_logs):
                 timestamp = log.get("timestamp", "Unknown")
                 if "T" in timestamp:
                     timestamp = timestamp.split(".")[0].replace("T", " ")
