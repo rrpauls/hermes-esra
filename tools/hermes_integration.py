@@ -222,6 +222,7 @@ class SkillInjector:
             name = _safe_component(skill_name, label="skill_name")
         except ValueError as e:
             print(f"Error hot-reloading skill: {e}", file=sys.stderr)
+            print("💡 Tip: Verify that the skill name only contains safe characters and the skill directory exists.", file=sys.stderr)
             return False
 
         # Optional safe reload of already-imported ESRA tool modules only
