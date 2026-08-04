@@ -63,7 +63,8 @@ class EvolutionHook:
         elif not self.history_file.parent.exists():
             self.history_file.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
             try:
-                os.chmod(self.history_file.parent, 0o700)
+                if not self.history_file.parent.is_symlink():
+                    os.chmod(self.history_file.parent, 0o700)
             except OSError:
                 pass
 
@@ -72,7 +73,8 @@ class EvolutionHook:
             with os.fdopen(fd, "w", encoding="utf-8") as f:
                 f.write("[]")
         elif self.history_file.stat().st_mode & 0o777 != 0o600:
-            os.chmod(self.history_file, 0o600)
+            if not self.history_file.is_symlink():
+                os.chmod(self.history_file, 0o600)
 
     def load_history(self, limit: int = 10) -> list:
         """Load recent evolution events."""

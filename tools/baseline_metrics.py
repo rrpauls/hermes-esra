@@ -29,7 +29,8 @@ class BaselineMetrics:
         else:
             self.snapshots_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
             try:
-                os.chmod(self.snapshots_dir, 0o700)
+                if not self.snapshots_dir.is_symlink():
+                    os.chmod(self.snapshots_dir, 0o700)
             except OSError:
                 pass
 
