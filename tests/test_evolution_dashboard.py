@@ -27,10 +27,11 @@ def test_dashboard_aggregates():
         )
 
         dashboard = EvolutionDashboard(log_dir=tmpdir)
-        logs = dashboard.load_logs()
-        assert len(logs) == 2
+        logs_generator = dashboard.load_logs()
+        logs_list = list(logs_generator)
+        assert len(logs_list) == 2
 
-        metrics = dashboard.calculate_metrics(logs)
+        metrics, recent_logs = dashboard.calculate_metrics(logs_list)
         assert metrics["total_cycles"] == 2
         assert metrics["successful_cycles"] == 1
         assert metrics["success_rate"] == 50.0
