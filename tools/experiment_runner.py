@@ -151,6 +151,7 @@ class ExperimentRunner:
         # Security: allowlist EXP-NNN only (blocks path traversal and odd filenames)
         if not is_safe_experiment_id(experiment_id):
             print(f"Error loading experiment: Invalid experiment ID format: {experiment_id}", file=sys.stderr)
+            print("💡 Tip: Experiment IDs must be in the format EXP-NNN (e.g., EXP-001).", file=sys.stderr)
             return None
 
         filepath = self.experiments_dir / f"{experiment_id}.json"
@@ -158,6 +159,7 @@ class ExperimentRunner:
             filepath.resolve().relative_to(self.experiments_dir.resolve())
         except ValueError:
             print(f"Error loading experiment: path escapes experiments dir: {experiment_id}", file=sys.stderr)
+            print("💡 Tip: Ensure the experiment ID does not contain path traversal characters.", file=sys.stderr)
             return None
         if not filepath.is_file() or filepath.is_symlink():
             return None
@@ -168,6 +170,7 @@ class ExperimentRunner:
             return Experiment.from_dict(data)
         except Exception as e:
             print(f"Error loading experiment {experiment_id}: {e}", file=sys.stderr)
+            print("💡 Tip: Check if the experiment JSON file is corrupted or formatted incorrectly.", file=sys.stderr)
             return None
 
     def list_experiments(self) -> List[Experiment]:
@@ -625,10 +628,12 @@ def main():
             exp = runner.load_experiment(args.id)
             if not exp:
                 print(f"{CLR_RED}Error reloading experiment {args.id}{CLR_RESET}", file=sys.stderr)
+                print(f"{CLR_YELLOW}💡 Tip: Check if the experiment file was deleted or permissions changed during execution.{CLR_RESET}", file=sys.stderr)
                 sys.exit(1)
 
             if results.get("error"):
                 print(f"❌ {CLR_RED}Experiment execution BLOCKED: {results['error']}{CLR_RESET}", file=sys.stderr)
+                print(f"{CLR_YELLOW}💡 Tip: Review the experiment's value alignment score and safeguards to ensure it meets execution criteria.{CLR_RESET}", file=sys.stderr)
                 sys.exit(1)
 
             if results.get("aborted"):
@@ -656,6 +661,7 @@ def main():
 
         except ValueError as e:
             print(f"{CLR_RED}Error: {e}{CLR_RESET}", file=sys.stderr)
+            print(f"{CLR_YELLOW}💡 Tip: Verify the experiment configuration and try running it again.{CLR_RESET}", file=sys.stderr)
             sys.exit(1)
 
     elif args.command == "stress":
