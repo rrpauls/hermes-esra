@@ -1,11 +1,11 @@
-# hermes-esra
+# Evolutionary Self-Recursive Architecture for Hermes Agent
 
 <p align="center">
-  <img src="assets/logo.png" alt="hermes-esra logo" width="240"/>
+  <img src="assets/logo-hermes-agent.png" alt="Evolutionary Self-Recursive Architecture for Hermes Agent logo" width="240"/>
 </p>
 
 <p align="center">
-  <strong>Hermes implementation of ESRA — Evolutionary Self-Recursive Architecture</strong>
+  <strong>Hermes Agent implementation of ESRA — Evolutionary Self-Recursive Architecture</strong>
 </p>
 
 <p align="center">
@@ -182,7 +182,7 @@ hermes-esra/
 ├── AGENTS.md              # Triggers, layout, and tool paths for Hermes
 ├── ROADMAP.md             # Phases 1–5 complete; 6–7 planned
 ├── install.sh             # Install skills + tools package into $HERMES_HOME
-├── assets/logo.png
+├── assets/logo-hermes-agent.png
 ├── skills/                # 15 ESRA skills (incl. esra-runtime)
 ├── tools/                 # Runtime package (copied to ~/.hermes/esra/tools/)
 └── tests/                 # Unit, integration, scenario, and stress tests
@@ -211,6 +211,12 @@ Keeping the conceptual core separate allows other agents and engines to implemen
    or trigger `hermes-evolution-orchestrator` in Hermes.
 
 Details and phase plan: **[ROADMAP.md](ROADMAP.md)**.
+
+---
+
+## Trademark notice
+
+Hermes Agent and its logo are associated with [Nous Research's Hermes Agent](https://github.com/NousResearch/hermes-agent). This independent ESRA integration is not endorsed or sponsored by Nous Research.
 
 ---
 
