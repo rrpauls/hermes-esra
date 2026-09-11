@@ -14,6 +14,8 @@
 
 <p align="center">
   <a href="https://github.com/rrpauls/esra">ESRA specification</a> ·
+  <a href="https://github.com/rrpauls/chatgpt-esra">OpenAI implementation</a> ·
+  <a href="https://github.com/rrpauls/claude-esra">Claude implementation</a> ·
   <a href="AGENTS.md">AGENTS.md</a> ·
   <a href="ROADMAP.md">ROADMAP</a> ·
   <a href="LICENSE">MIT License</a>
@@ -190,12 +192,14 @@ hermes-esra/
 
 ---
 
-## Relationship to ESRA
+## Repository relationship
 
 | Repository | Role |
 |------------|------|
 | [esra](https://github.com/rrpauls/esra) | Architecture specification (what ESRA is) |
 | **hermes-esra** (this repo) | Hermes-ready skills, tools, and install path |
+| [chatgpt-esra](https://github.com/rrpauls/chatgpt-esra) | OpenAI implementation for ChatGPT and Codex |
+| [claude-esra](https://github.com/rrpauls/claude-esra) | Claude implementation |
 
 Keeping the conceptual core separate allows other agents and engines to implement ESRA without inheriting Hermes-specific code.
 
