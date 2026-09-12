@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  Meta-skills, orchestrator, and tools that make Hermes self-development systematic, value-aligned, auditable, and compounding.
+  Meta-skills, orchestrator, and tools for systematic, value-aligned, auditable Hermes improvement workflows.
 </p>
 
 <p align="center">
@@ -18,6 +18,7 @@
   <a href="https://github.com/rrpauls/claude-esra">Claude implementation</a> ·
   <a href="AGENTS.md">AGENTS.md</a> ·
   <a href="ROADMAP.md">ROADMAP</a> ·
+  <a href="https://github.com/rrpauls/esra/blob/main/conformance/compatibility-matrix.json">Compatibility matrix</a> ·
   <a href="LICENSE">Apache-2.0 License</a>
 </p>
 
@@ -76,9 +77,11 @@ After install, restart Hermes (or use `/skills`), then run tools by **installed 
 
 ```bash
 python ~/.hermes/esra/tools/evolution_hook.py
+# Generate a forced recommendation and orchestrator prompt; does not run a cycle
 python ~/.hermes/esra/tools/evolution_hook.py --force-cycle
 python ~/.hermes/esra/tools/skill_validator.py --verbose --skills-dir ~/.hermes/skills/esra
 python ~/.hermes/esra/tools/evolution_dashboard.py
+python ~/.hermes/esra/tools/esra_export.py --data-dir ~/.hermes --output /tmp/esra-events.jsonl
 ```
 
 Respects `$HERMES_HOME` / `$ESRA_HOME`. From a source checkout you can still use `python tools/…`.
@@ -88,9 +91,9 @@ Respects `$HERMES_HOME` / `$ESRA_HOME`. From a source checkout you can still use
 ## How the system works
 
 ```
-Hermes task or learning event
+Hermes task or recorded learning event
         │
-        │  after complex task / skill creation
+        │  after a qualifying major change / repeated failure
         ▼
 caller invokes evolution_hook.py ── analyzes supplied context/history ──┐
         │                                                     │
@@ -128,12 +131,12 @@ Installed under `~/.hermes/skills/esra/`:
 | `esra-runtime` | Documents installed tool paths; use when locating/running ESRA CLIs |
 | `hermes-evolution-orchestrator` | Central conductor of the ESRA loop |
 | `ooda-framework` | Observe → Orient → Decide → Act structuring |
-| `self-observer` | Honest monitoring of internal state and patterns |
+| `self-observer` | Evidence-based review of recorded state and patterns |
 | `self-improver` | Systematic improvement of skills and processes |
 | `value-clarifier` | Value alignment (**mandatory before experiments**) |
 | `experimenter` | Safe, hypothesis-driven improvement tests |
 | `mental-model-updater` | Integrate learnings into long-term models |
-| `antifragility-builder` | Grow stronger from stress and uncertainty |
+| `antifragility-builder` | Derive testable resilience changes from stress and uncertainty |
 | `loop-auditor` | Meta-audit of the evolutionary process (every 5–10 cycles) |
 | `optimizer-philosopher` | Trade-off, ethics, and meaning analysis |
 | `system-dynamics-thinker` | Feedback loops, stocks & flows, leverage points |
@@ -149,7 +152,7 @@ Installed under `~/.hermes/skills/esra/`:
 
 | Tool | Purpose |
 |------|---------|
-| `evolution_hook.py` | Smart trigger: complexity, new skills, confidence, rate limits |
+| `evolution_hook.py` | Trigger recommendation: complexity, new skills, confidence, rate limits |
 | `esra_logger.py` | Structured JSON logs under `~/.hermes/evolution-logs/` |
 | `esra_export.py` | Privacy-filtered ESRA 1.2 `cycle-event` JSONL export |
 | `evolution_dashboard.py` | CLI view of cycle metrics and recent history |
@@ -233,10 +236,10 @@ Keeping the conceptual core separate allows other agents and engines to implemen
 
 1. Prefer branches `feature/…` for roadmap work or `evolve/skill-name-vN` for skill evolution (see `tools/human_oversight.py`).
 2. Before larger changes: `python tools/skill_validator.py` and `PYTHONPATH=. pytest`.
-3. After significant work, run an ESRA cycle:
-   `python ~/.hermes/esra/tools/evolution_hook.py --force-cycle`
-   (or `python tools/evolution_hook.py --force-cycle` from a checkout)
-   or trigger `hermes-evolution-orchestrator` in Hermes.
+3. After qualifying significant work, explicitly activate
+   `hermes-evolution-orchestrator` for one bounded review. The command
+   `python ~/.hermes/esra/tools/evolution_hook.py --force-cycle` only generates
+   a recommendation and prompt; it does not execute the review itself.
 
 Details and phase plan: **[ROADMAP.md](ROADMAP.md)**.
 
