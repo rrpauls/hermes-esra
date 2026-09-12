@@ -18,22 +18,30 @@
   <a href="https://github.com/rrpauls/claude-esra">Claude implementation</a> ·
   <a href="AGENTS.md">AGENTS.md</a> ·
   <a href="ROADMAP.md">ROADMAP</a> ·
-  <a href="LICENSE">MIT License</a>
+  <a href="LICENSE">Apache-2.0 License</a>
 </p>
 
 ---
 
 ## What this is
 
-Hermes already improves from experience. This repository adds a **meta-layer** on top of that loop so evolution is:
+This repository provides an installable **ESRA meta-layer toolkit** for
+Hermes. It supplies skills, local tools, and integration interfaces for making
+improvement work:
 
 | Quality | How |
 |---------|-----|
 | **Structured** | OODA-powered orchestrator and skill sequence |
-| **Automatic** | `evolution_hook.py` decides when to run a full ESRA cycle |
+| **Trigger-aware** | `evolution_hook.py` recommends when a full ESRA cycle may be useful |
 | **Value-aligned** | `value-clarifier` gate before experiments |
 | **Auditable** | Logging, dashboard, metrics, and `loop-auditor` |
-| **Antifragile** | Skills that improve under stress and uncertainty |
+| **Resilience-oriented** | Skills help turn observed failures and stress into testable changes |
+
+The current release does **not** autonomously execute an ESRA cycle, hot-reload
+a Markdown skill into a running Hermes process, or run real agent variants in
+its simulated A/B helper. Those capabilities require a host-level Hermes
+adapter and end-to-end evidence; their status is tracked in
+[ROADMAP.md](ROADMAP.md).
 
 The pure architecture (principles, 8 levels, Loop Execution Protocol) lives in a separate repo:
 
@@ -60,6 +68,7 @@ chmod +x install.sh
 | Meta-skills | `~/.hermes/skills/esra/` | Hermes discovers skills only under `~/.hermes/skills/` |
 | Runtime tools | `~/.hermes/esra/tools/` | Shared Python package with stable absolute paths |
 | Manifest | `~/.hermes/esra/manifest.json` | Machine-readable inventory for the agent |
+| Conformance declaration | `~/.hermes/esra/conformance.json` | Supported protocol and evidence-backed capability status |
 | `AGENTS.md` | `~/.hermes/AGENTS.md` | Triggers + path docs Hermes loads as instructions |
 | `esra-runtime` skill | under `skills/esra/` | Teaches Hermes **where** tools live |
 
@@ -79,15 +88,15 @@ Respects `$HERMES_HOME` / `$ESRA_HOME`. From a source checkout you can still use
 ## How the system works
 
 ```
-Hermes native learning loop
+Hermes task or learning event
         │
         │  after complex task / skill creation
         ▼
-evolution_hook.py  ── analyzes context, confidence, history ──┐
+caller invokes evolution_hook.py ── analyzes supplied context/history ──┐
         │                                                     │
-        │  trigger?                                           │ skip
+        │  recommend cycle?                                    │ skip
         ▼                                                     ▼
-hermes-evolution-orchestrator                          (no action)
+caller activates hermes-evolution-orchestrator                 (no action)
         │
         ▼
 ooda-framework
@@ -104,7 +113,9 @@ experimenter → antifragility-builder → (domain skills as needed)
 loop-auditor
 ```
 
-**Core rule (also in `AGENTS.md`):** after any complex task, skill creation, or significant improvement, run `hermes-evolution-orchestrator` — or say `orchestrate evolution` / `run full ESRA cycle`.
+**Core rule (also in `AGENTS.md`):** after a major architecture or skill
+change, repeated failure, or an explicit request, evaluate whether one bounded
+ESRA cycle is justified. A trigger recommendation is not an executed cycle.
 
 ---
 
@@ -144,9 +155,14 @@ Installed under `~/.hermes/skills/esra/`:
 | `baseline_metrics.py` | KPI tracking and snapshots |
 | `skill_validator.py` | Frontmatter, branding, dependency DAG, stage/promote |
 | `experiment_runner.py` | Canary, staged, A/B, and stress experiment lifecycle |
-| `hermes_integration.py` | Post-task hooks, skill injection, config feedback |
-| `human_oversight.py` | GitHub issues/PRs and `evolve/skill-name-vN` branches |
+| `hermes_integration.py` | Host-adapter prototype, local skill versioning, and config proposals |
+| `human_oversight.py` | Human-review artifacts and suggested GitHub/branch operations |
 | `esra_paths.py` | Shared Hermes/ESRA path resolution |
+
+Capability maturity and its evidence are declared in
+[`esra-conformance.json`](esra-conformance.json). A declaration marked
+`simulated` or `planned` is intentionally not presented as host-native
+behavior.
 
 Tools are **not** Hermes built-in toolsets. They are a package under Hermes home; Hermes finds them through `esra-runtime` + `AGENTS.md` + `manifest.json`.
 
@@ -182,7 +198,7 @@ Continuous integration (`.github/workflows/ci.yml`) validates tool syntax, skill
 ```
 hermes-esra/
 ├── AGENTS.md              # Triggers, layout, and tool paths for Hermes
-├── ROADMAP.md             # Phases 1–5 complete; 6–7 planned
+├── ROADMAP.md             # Evidence-based maturity and future work
 ├── install.sh             # Install skills + tools package into $HERMES_HOME
 ├── assets/logo-hermes-agent.png
 ├── skills/                # 15 ESRA skills (incl. esra-runtime)
@@ -224,4 +240,5 @@ Hermes Agent and its logo are associated with [Nous Research's Hermes Agent](htt
 
 ---
 
-**Status:** Active (July 2026) · **Version:** 1.2 · **License:** [MIT](LICENSE)
+**Status:** Validated integration toolkit; host-native automation remains
+experimental · **Version:** 1.2 · **License:** [Apache-2.0](LICENSE)

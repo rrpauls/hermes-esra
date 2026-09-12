@@ -16,21 +16,21 @@ Use this skill when:
 - Explicitly requested to audit the evolution loop.
 - **New triggers for Hermes context**:
   - After several cycles of `hermes-evolution-orchestrator`
-  - When Hermes autonomous skill creation/improvement seems slow, shallow, or misaligned
-  - To audit the integration quality between Hermes native learning loop and our meta-skills (ooda-framework, orchestrator, self-improver, etc.)
+  - When observed skill-creation or improvement workflows seem slow, shallow, or misaligned
+  - To audit the integration quality between recorded Hermes workflows and our meta-skills (ooda-framework, orchestrator, self-improver, etc.)
   - Periodically (recommended: every 5–10 significant evolution cycles)
 
 ## Core Audit Process
 
 ### 0. Audit Hermes + Orchestrator Integration (Hermes-specific)
-- How effectively does `hermes-evolution-orchestrator` connect Hermes native learning loop with our meta-skills?
-- Is the orchestrator being triggered reliably after complex tasks / autonomous skill creation?
+- How effectively does `hermes-evolution-orchestrator` connect observed Hermes workflows with our meta-skills?
+- Is the orchestrator being invoked deliberately after qualifying complex tasks or skill changes?
 - Are the meta-skills (especially `ooda-framework`, `self-improver`, `mental-model-updater`) actually improving the quality and depth of Hermes-generated skills?
-- Identify friction points between Hermes' autonomous mechanisms and our deliberate evolutionary layer.
+- Identify friction points between host behavior and our deliberate evolutionary layer without assuming unobserved native automation.
 - Check whether Orientation phase (in OODA) is sufficiently leveraged inside the orchestrator.
 
 ### 1. Map Current State of the Loop  
-   Identify active skills and interaction patterns (including Hermes native loop + orchestrator).
+   Identify active skills and interaction patterns from recorded evidence (including Hermes workflows + orchestrator).
 
 2. **Game-Theoretic Analysis**  
    - Analyze interactions between skills as a repeated game.

@@ -10,10 +10,10 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
@@ -21,6 +21,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pyyaml pytest
+
+      - name: Validate licensing
+        run: |
+          grep -q "Apache License" LICENSE
+          test -s NOTICE
+          test -s CONTRIBUTING.md
+          grep -q "Apache-2.0 License" README.md
+          python -m json.tool esra-conformance.json >/dev/null
+          grep -q '"protocol_version": "1.2"' esra-conformance.json
 
       - name: Validate Python syntax
         run: |

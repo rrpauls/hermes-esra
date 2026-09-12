@@ -1,9 +1,12 @@
 """
 hermes_integration.py
 
-Native Hermes Deep Integration Layer (Phase 4).
-Formalizes the plugin interface, automatic evolution triggering,
-skill injection/hot-reloading, and system config feedback loops.
+Hermes host-adapter prototype.
+
+Provides local interfaces for trigger recommendations, skill-file versioning,
+simulated comparisons, and configuration proposals. It is not wired to a
+native Hermes lifecycle API and does not reload Markdown skills in a running
+Hermes process.
 """
 
 from __future__ import annotations
@@ -142,7 +145,7 @@ class HermesPluginInterface:
 
 class AutomaticEvolutionTrigger:
     """
-    Manages automated triggering of evolution with configurable aggressiveness.
+    Evaluates whether a caller should trigger evolution.
     """
     def __init__(self, aggressiveness: str = "medium", hermes_home: Optional[Path] = None):
         self.aggressiveness = aggressiveness.lower()
@@ -182,7 +185,7 @@ class AutomaticEvolutionTrigger:
 
     def post_task_trigger(self, task_context: Dict[str, Any], result: Dict[str, Any], metrics: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Executes automatic post-task triggering evaluation and logs decision.
+        Returns a post-task recommendation; it does not execute an ESRA cycle.
         """
         decision = self.should_trigger(task_context, metrics)
 
@@ -196,7 +199,8 @@ class AutomaticEvolutionTrigger:
 
 class SkillInjector:
     """
-    Enables skill hot-reloading, side-by-side versioning of skills, and A/B testing of skill variants.
+    Provides safe skill-file discovery/versioning and a simulated comparison
+    helper. Host-level reload and real agent execution are not implemented.
     """
     def __init__(self, skills_dir: Optional[Path] = None):
         self.skills_dir = Path(skills_dir or Path.home() / ".hermes" / "skills" / "esra")
@@ -211,7 +215,11 @@ class SkillInjector:
 
     def hot_reload_skill(self, skill_name: str) -> bool:
         """
-        Verifies a markdown skill exists under skills_dir for hot-reload.
+        Verifies a Markdown skill exists under `skills_dir`.
+
+        The legacy method name is retained for API compatibility. Returning
+        `True` for a Markdown skill means "available on disk", not "reloaded
+        by a running Hermes host".
 
         Does **not** call importlib.import_module on attacker-controlled names
         (that would allow loading arbitrary Python packages with side effects).
@@ -221,7 +229,7 @@ class SkillInjector:
         try:
             name = _safe_component(skill_name, label="skill_name")
         except ValueError as e:
-            print(f"Error hot-reloading skill: {e}", file=sys.stderr)
+            print(f"Error refreshing skill reference: {e}", file=sys.stderr)
             return False
 
         # Optional safe reload of already-imported ESRA tool modules only
@@ -271,8 +279,10 @@ class SkillInjector:
 
     def ab_test_skills(self, skill_v1: str, skill_v2: str, task: Dict[str, Any], num_trials: int = 5) -> Dict[str, Any]:
         """
-        A/B testing framework to compare two skill variants (v1 vs v2) on identical tasks.
-        Evaluates metrics (e.g. success rate, confidence, duration) to find the best-performing skill.
+        Generate deterministic demonstration data for two named variants.
+
+        This method does not execute either skill and its output must not be
+        used as promotion evidence.
         """
         # Simulated side-by-side run evaluations
         v1_scores = []
@@ -318,14 +328,19 @@ class SkillInjector:
                 }
             },
             "winner": winner,
-            "recommendation": f"Promote {winner} to primary version"
+            "recommendation": (
+                f"Simulation favors {winner}; run a real, human-reviewed "
+                "experiment before any promotion"
+            )
         }
 
 
 class ESRAFeedbackLoop:
     """
-    Updates agent instructions, propagates value changes to prompts,
-    and logs decision-making reasoning chains.
+    Writes local prompt/config artifacts for host review.
+
+    Writing these files does not prove that a running Hermes instance loaded
+    or applied them.
     """
     def __init__(self, config_dir: Optional[Path] = None):
         self.config_dir = Path(config_dir or Path.home() / ".hermes" / "config")

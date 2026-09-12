@@ -5,9 +5,8 @@ evolution_hook.py
 Smart trigger for the ESRA (Evolutionary Self-Recursive Architecture) process inside Hermes.
 
 Purpose:
-- Automatically detect when Hermes has completed a complex task
-  or created/improved a skill.
-- Decide whether to trigger `hermes-evolution-orchestrator`.
+- Evaluate caller-supplied context for a completed complex task or skill change.
+- Recommend whether the caller should trigger `hermes-evolution-orchestrator`.
 - Provide a clean foundation for future deeper integration
   (native Hermes tool, sub-agent, or post-processing hook).
 
@@ -44,8 +43,7 @@ except ImportError:
 
 class EvolutionHook:
     """
-    Decides when and how to trigger the ESRA orchestrator
-    after Hermes activity.
+    Produces a trigger recommendation from caller-supplied Hermes activity.
     """
 
     def __init__(self, hermes_home: Optional[Path] = None):
@@ -201,7 +199,9 @@ Save important insights to persistent memory.
         """
         Main entry point.
         Returns a structured decision + recommended prompt.
-        In a full native integration this would call Hermes tools / sub-agents.
+
+        The legacy ``triggered`` result field means that orchestration was
+        recommended; this adapter does not invoke a Hermes cycle by itself.
         """
         decision = self.should_trigger_orchestrator(task_context)
 
@@ -226,7 +226,7 @@ Save important insights to persistent memory.
 
     def trigger_force_cycle(self, task_context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
-        Force an ESRA evolution cycle regardless of heuristics or rate limiting.
+        Force an ESRA cycle recommendation regardless of heuristics or rate limiting.
         Invoked via: python ~/.hermes/esra/tools/evolution_hook.py --force-cycle
         """
         ctx = task_context or {

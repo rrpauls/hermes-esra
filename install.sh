@@ -12,6 +12,7 @@
 #   $HERMES_HOME/skills/esra/   — meta-skills (Hermes discovers these)
 #   $HERMES_HOME/esra/tools/    — Python tools package (stable absolute paths)
 #   $HERMES_HOME/esra/manifest.json
+#   $HERMES_HOME/esra/conformance.json
 #   $HERMES_HOME/AGENTS.md
 #
 # Env:
@@ -31,6 +32,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_SKILLS="$SCRIPT_DIR/skills"
 SOURCE_TOOLS="$SCRIPT_DIR/tools"
 AGENTS_SOURCE="$SCRIPT_DIR/AGENTS.md"
+CONFORMANCE_SOURCE="$SCRIPT_DIR/esra-conformance.json"
 
 HERMES_HOME="${HERMES_HOME:-$HOME/.hermes}"
 ESRA_HOME="${ESRA_HOME:-$HERMES_HOME/esra}"
@@ -38,6 +40,7 @@ SKILLS_DEST="$HERMES_HOME/skills/esra"
 TOOLS_DEST="$ESRA_HOME/tools"
 AGENTS_DEST="$HERMES_HOME/AGENTS.md"
 MANIFEST_DEST="$ESRA_HOME/manifest.json"
+CONFORMANCE_DEST="$ESRA_HOME/conformance.json"
 
 # Validate sources
 if [ ! -d "$SOURCE_SKILLS" ]; then
@@ -124,17 +127,25 @@ cat > "$MANIFEST_DEST" <<EOF
 {
   "name": "hermes-esra",
   "version": "1.2",
+  "protocol_version": "1.2",
   "installed_at": "$INSTALLED_AT",
   "hermes_home": "$HERMES_HOME",
   "esra_home": "$ESRA_HOME",
   "skills_dir": "$SKILLS_DEST",
   "tools_dir": "$TOOLS_DEST",
   "agents_md": "$AGENTS_DEST",
+  "conformance": "$CONFORMANCE_DEST",
   "tools": ${TOOLS_JSON}
 }
 EOF
 chmod 600 "$MANIFEST_DEST" 2>/dev/null || true
 echo "✅ Manifest written"
+
+if [ -f "$CONFORMANCE_SOURCE" ]; then
+    cp "$CONFORMANCE_SOURCE" "$CONFORMANCE_DEST"
+    chmod 600 "$CONFORMANCE_DEST" 2>/dev/null || true
+    echo "✅ Conformance declaration installed"
+fi
 
 # --- AGENTS.md (with installed tool path section injected if template markers exist) ---
 if [ -f "$AGENTS_SOURCE" ]; then
@@ -167,6 +178,7 @@ echo "   python $TOOLS_DEST/skill_validator.py --verbose --skills-dir $SKILLS_DE
 echo
 echo "3. Paths are recorded in:"
 echo "   $MANIFEST_DEST"
+echo "   $CONFORMANCE_DEST"
 echo
 echo "4. Recommended first tests in Hermes:"
 echo "   - Activate 'esra-runtime' (where tools live)"

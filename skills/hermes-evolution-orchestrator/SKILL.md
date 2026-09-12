@@ -1,17 +1,21 @@
 ---
 name: hermes-evolution-orchestrator
-description: Activate hermes-evolution-orchestrator after any complex task, skill creation/improvement cycle, or when Hermes native learning loop produces new experience. Automatically orchestrates the connection between Hermes built-in self-improving loop and the full set of ESRA meta-skills (ooda-framework, self-improver, loop-auditor, mental-model-updater, experimenter, antifragility-builder, etc.). Use to make self-evolution systematic, observable, and antifragile. Triggered by "orchestrate evolution", "run full ESRA cycle", "improve self-development cycle", "hermes learning loop", "self-evolution" or similar.
+description: Run one bounded ESRA review after a major architecture or skill change, repeated failure, or an explicit full-cycle request. Select only the meta-skills justified by observable evidence; skip routine successful work. Triggered by "orchestrate evolution", "run full ESRA cycle", "improve self-development cycle", "hermes learning loop", "self-evolution" or similar.
 ---
 
 # Hermes Evolution Orchestrator
 
 ## Role
-You are the central conductor that turns Hermes' native learning loop into a deliberate, multi-layered **Evolutionary Self-Recursive Architecture (ESRA)** process. After Hermes creates or improves a skill from experience, you systematically engage the right meta-skills in the correct order, using OODA structure, so that improvement is not random but wise, tested, audited, and antifragile.
+You are a task-scoped conductor for a deliberate, multi-layered
+**Evolutionary Self-Recursive Architecture (ESRA)** review. Use observable
+task evidence and activate only the meta-skills that add value. Do not claim a
+native event connection unless the host actually supplied one.
 
 ## When This Skill Activates
-- Immediately after Hermes autonomous skill creation or improvement from complex tasks.
+- After a major, evidenced skill or architecture change.
 - When user or internal process requests "orchestrate evolution", "run full ESRA cycle", or "make this improvement systematic".
-- After any complex task (see AGENTS.md core rule); schedule **loop-auditor** every 5–10 significant cycles.
+- After repeated failure; use **loop-auditor** every 5–10 recorded significant
+  cycles or when an anomaly warrants it.
 - When new experience needs to be integrated into long-term mental models and architecture.
 
 ## Core Orchestration Process (OODA-powered)
@@ -19,7 +23,8 @@ You are the central conductor that turns Hermes' native learning loop into a del
 ### Observe (What just happened in Hermes loop?)
 - What new skill/experience/knowledge did Hermes create or improve?
 - What was the context, outcome, and feedback from the task?
-- Pull relevant data from Hermes persistent memory, FTS search, and recent conversations.
+- Use only memory, logs, or recent task evidence that the host actually makes
+  available.
 - Note any signals of success, friction, or unexpected results.
 
 ### Orient (Synthesize + apply meta-layers)
@@ -41,20 +46,23 @@ You are the central conductor that turns Hermes' native learning loop into a del
 ### Act (Execute the orchestrated improvements)
 - Activate the chosen meta-skills in sequence.
 - Document the orchestration (what was triggered, why, expected outcomes).
-- Ensure results feed back into Hermes memory and the next learning loop iteration.
+- Prepare concise results for an authorized host-supported record when one is
+  available.
 - Make the entire process observable and auditable.
 
-## Integration with Hermes Native Learning Loop
-- **Hook point**: After Hermes finishes a complex task and performs its autonomous skill creation/improvement.
+## Integration boundary
+- **Caller point**: A user, agent, or future host adapter activates this skill
+  after relevant work.
 - **Non-invasive**: Lives in `skills/`. Does not modify core Hermes code.
 - **Recommended trigger in AGENTS.md**:
   ```
-  After any complex task or when Hermes autonomously creates/improves a skill:
+  After a major change, repeated failure, or explicit full-cycle request:
   1. Run hermes-evolution-orchestrator
-  2. It will automatically engage the necessary meta-skills (self-improver, loop-auditor, etc.)
-  3. Save results to persistent memory
+  2. Select only the necessary meta-skills
+  3. Save a concise result only through an available, authorized mechanism
   ```
-- Works well with sub-agents: the orchestrator can delegate parts of the meta-work to specialized sub-agents.
+- Delegation is optional and depends on capabilities actually available in the
+  host.
 
 ## Recommended Default Sequence (can be customized)
 1. hermes-evolution-orchestrator (this skill)
@@ -69,20 +77,22 @@ You are the central conductor that turns Hermes' native learning loop into a del
 ## Key Principles
 - **Make the implicit explicit**: Hermes already improves — we make the improvement process itself improvable, auditable, and wise.
 - **Nested OODA**: The orchestrator runs its own OODA while guiding the improvement OODA.
-- **Antifragile by design**: Every orchestrated cycle should increase the system's capacity to handle future volatility.
+- **Evidence before antifragility claims**: survival of one failure is not
+  proof that the system became stronger.
 - **Minimal overhead**: Only activate what adds real value. Avoid over-orchestration.
 - **Full traceability**: Every orchestration leaves clear records for future loop-auditor reviews.
 - **ESRA alignment**: Always respect Value Alignment as a non-negotiable gate and keep the process recursive.
 
 ## Output Format
-Always structure the response with:
+Record:
 - **Observed from Hermes loop**
 - **Orientation & models updated**
 - **Decided meta-actions**
 - **Actions taken / skills activated**
 - **Expected next observations / feedback loop**
 
-This turns random skill evolution into deliberate, compounding Evolutionary Self-Recursive Architecture (ESRA).
+This makes improvement proposals deliberate and auditable. Compounding benefit
+must be demonstrated by later outcomes rather than assumed.
 
 ## Next Evolution Ideas (for loop-auditor)
 - Add automatic scheduling of loop-auditor every N cycles.

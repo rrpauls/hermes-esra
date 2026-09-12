@@ -1,0 +1,38 @@
+{
+  "implementation": "hermes-esra",
+  "implementation_version": "1.2.0",
+  "protocol_version": "1.2",
+  "runtime": "Hermes Agent",
+  "capabilities": {
+    "cycle_review": {
+      "status": "implemented",
+      "evidence": ["skills/hermes-evolution-orchestrator/SKILL.md"]
+    },
+    "trigger_recommendation": {
+      "status": "verified",
+      "evidence": ["tests/test_evolution_hook.py", "tests/test_hermes_integration.py"]
+    },
+    "evidence_logging": {
+      "status": "verified",
+      "evidence": ["tests/test_esra_logger.py"]
+    },
+    "experiment_execution": {
+      "status": "verified",
+      "evidence": ["tests/test_experiment_runner.py"]
+    },
+    "host_lifecycle_hook": {
+      "status": "planned",
+      "evidence": ["ROADMAP.md#phase-4-hermes-host-integration-prototype--partial"]
+    },
+    "markdown_skill_reload": {
+      "status": "simulated",
+      "evidence": ["tools/hermes_integration.py", "tests/test_hermes_integration.py"],
+      "notes": "The current helper verifies on-disk availability only."
+    },
+    "agent_variant_ab_execution": {
+      "status": "simulated",
+      "evidence": ["tools/hermes_integration.py"],
+      "notes": "The current helper emits deterministic demonstration scores."
+    }
+  }
+}

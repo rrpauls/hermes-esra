@@ -2,17 +2,31 @@
 
 **Goal:** Establish Hermes as a self-improving agent through systematic integration of the Evolutionary Self-Recursive Architecture (ESRA).
 
-**Current Status:** v1.2 (Phases 1–5 complete; Phase 6 planned)
-**Last Updated:** 28 July 2026
+**Current Status:** v1.2 validated integration toolkit; native Hermes
+automation and outcome evidence remain incomplete.
+**Last Updated:** 12 September 2026
+
+## Maturity definitions
+
+- **Implemented** — code or skill content exists and passes repository checks.
+- **Verified** — the stated behavior has an automated test with observable
+  pass/fail criteria.
+- **Simulated** — demonstration data or a local facade exists, but no real
+  Hermes skill execution occurs.
+- **Planned** — no working implementation exists yet.
+
+A phase is complete only when its user-visible outcome is verified end to end.
+The presence of a class, method, prompt, or checklist is not by itself native
+integration or evidence of improved agent performance.
 
 ---
 
-## Phase 1: Foundation & Stabilization ✓ (COMPLETE)
+## Phase 1: Foundation & Packaging ✓ (IMPLEMENTED)
 
 ### Objectives
 - Establish core ESRA meta-skills library
 - Define orchestrator patterns and triggering rules
-- Integrate with Hermes native learning loop
+- Define an integration boundary for a future Hermes lifecycle adapter
 - Create initial skill ecosystem
 
 ### Completed
@@ -29,22 +43,23 @@
 - [x] **optimizer-philosopher** — Trade-off analysis
 - [x] **system-dynamics-thinker** — Feedback modeling
 - [x] **crisis-manager** — High-stakes reasoning
-- [x] **hermes-codebase-engineer** — Native Hermes integration
+- [x] **hermes-codebase-engineer** — Hermes-oriented engineering guidance
 - [x] **github-actions-integrator** — CI/CD workflow automation
 - [x] **AGENTS.md** — Official meta-skill documentation
 - [x] **Installation script** — Automated skill deployment
 
-### Metrics
-- 15 skills operational (14 meta-skills + esra-runtime path bridge)
-- Zero unplanned ESRA cycle terminations
-- Orchestrator after complex tasks; loop-auditor every 5–10 cycles
+### Verified evidence
+- 15 skill packages pass metadata and dependency-DAG validation.
+- The installer and local Python tools are covered by repository tests.
+- No claim is made about cycle success or audit cadence without recorded
+  production cycles.
 
 ---
 
-## Phase 2: Observability & Feedback ✓ (COMPLETE)
+## Phase 2: Observability & Feedback ◐ (PARTIAL)
 
 ### Objectives
-- Build comprehensive logging & audit trails
+- Build bounded local logging and audit summaries
 - Create dashboards for evolutionary progress
 - Establish baseline metrics for self-improvement quality
 - Enable human oversight and anomaly detection
@@ -52,17 +67,17 @@
 ### Work Items
 
 #### 2.1 ESRA Cycle Logging
-- [x] Structured JSON logging for all orchestrator invocations
-- [x] Log schema for:
+- [x] Structured JSON logging helpers for caller-recorded events
+- [x] Local event fields for:
   - Input state (task complexity, prior success rate, skills available)
   - Orchestrator decisions (which skills activated, meta-loop stage)
   - Outputs (new skills created, improvements applied, value changes)
   - Duration and resource consumption
-- [x] Central log aggregation in `~/.hermes/evolution-logs/`
+- [x] Local log storage under `~/.hermes/evolution-logs/`
 - [x] Retention policy (30-day rolling history)
 
 #### 2.2 Evolution Dashboard
-- [x] Create `tools/evolution_dashboard.py` — Web UI or CLI visualization
+- [x] Create `tools/evolution_dashboard.py` — CLI summary
 - [x] Display metrics:
   - Cycle count and success rate
   - New skills created vs. skills improved
@@ -76,44 +91,43 @@
   - Evolutionary pace (cycles per day, new skills/week)
   - Value coherence (drift from core principles)
   - Hermes task success rate (with/without evolved skills)
-- [x] Historical snapshots (monthly)
+- [x] Snapshot storage support
+- [ ] Evidence of regular monthly snapshots from real deployments
 
 #### 2.4 Human Oversight Integration
-- [x] GitHub Issues as evolutionary audit trail
-  - Auto-create issues from crisis-manager interventions
-  - Periodic summary issues (e.g., "Weekly Evolution Report")
-- [x] Pull requests for skill updates
-  - Branch naming: `evolve/skill-name-vN`
-  - Automated test runs before merge
+- [x] Helpers that prepare human-review and GitHub artifacts
+- [ ] Verified automatic issue creation from a real Hermes lifecycle
+- [x] Suggested branch naming: `evolve/skill-name-vN`
+- [x] Repository CI before merge
 
 ---
 
-## Phase 3: Skill Maturation & Testing ✓ (COMPLETE)
+## Phase 3: Validation & Testing ◐ (PARTIAL)
 
 ### Objectives
-- Ensure ESRA meta-skills are production-grade
+- Validate ESRA skill structure and local tool behavior
 - Create comprehensive test suites
-- Enable safe skill evolution in real Hermes deployments
+- Prepare bounded mechanisms for skill evolution
 - Build skill validation framework
 
 ### Work Items
 
 #### 3.1 Test Suite for Each Meta-Skill
 - [x] Unit tests (logic correctness)
-- [x] Integration tests (interaction with hermes-evolution-orchestrator)
+- [x] Integration tests for local tool interactions
 - [x] Scenario tests (realistic task + context)
 - [x] Regression tests (ensure prior improvements persist)
-- [x] Target: 80%+ coverage per skill
+- [ ] Measured 80%+ code coverage; CI currently runs tests without a coverage
+  report or threshold
 
 #### 3.2 Skill Validation Framework
 - [x] `tools/skill_validator.py` — Automated checks:
   - Syntax correctness
   - Required inputs available
-  - Output schema compliance
-  - Performance baseline
-  - Value alignment (value-clarifier validation)
-- [x] Staging environment for skill trials
-- [x] Rollback mechanism for failed skills
+  - Declared dependency consistency
+- [x] Local staging and promotion data structures
+- [x] Local rollback paths covered by tests
+- [ ] End-to-end staging and rollback in a running Hermes host
 
 #### 3.3 Stress Testing ESRA Loop
 - [x] Simulate rapid task sequences
@@ -128,45 +142,48 @@
 
 ---
 
-## Phase 4: Native Hermes Deep Integration ✓ (COMPLETE)
+## Phase 4: Hermes Host Integration Prototype ◐ (PARTIAL)
 
 ### Objectives
-- Make ESRA loop native to Hermes execution model
+- Define and verify a real adapter against Hermes lifecycle APIs
 - Remove friction between task completion and evolution
-- Enable automatic evolution triggering
+- Enable opt-in host-triggered evolution recommendations
 - Integrate with Hermes' own internal architecture
 
 ### Work Items
 
 #### 4.1 Hermes Plugin Interface
-- [x] Formalize Hermes hook for post-task analysis (implemented in `tools/hermes_integration.py` as `HermesPluginInterface`)
+- [x] Implement a local post-task interface in `HermesPluginInterface`
   - `post_task_hook(task_context, result, metrics)` → evolution trigger
-  - Aligned with Hermes' native learning loop
-- [x] Bidirectional communication:
-  - Skills can query Hermes state (`query_hermes_state`)
-  - Orchestrator can suggest Hermes config changes (`suggest_config_changes`)
+  - Not yet wired to a verified native Hermes event hook
+- [x] Query local installed-state metadata
+- [x] Write pending configuration proposals
+- [ ] Verify bidirectional communication with a running Hermes process
 
 #### 4.2 Automatic Evolution Triggering
-- [x] Embed evolution_hook.py logic directly in Hermes (`AutomaticEvolutionTrigger`)
-- [x] Remove manual invocation requirement for high-complexity tasks
+- [x] Expose trigger scoring through `AutomaticEvolutionTrigger`
+- [ ] Register it with a real Hermes post-task lifecycle event
+- [ ] Remove manual caller invocation
 - [x] Configurable aggressiveness (how often to trigger: `low`, `medium`, `high`)
 
 #### 4.3 Skill Injection & Reloading
-- [x] Enable hot-reload of improved skills without Hermes restart (`SkillInjector.hot_reload_skill`)
+- [x] Safely verify that a skill file exists
+- [ ] Hot-reload a Markdown skill in a running Hermes process
 - [x] Versioning system for concurrent skill variants (`SkillInjector.version_skill`)
-- [x] A/B testing framework (skill v1 vs. v2 on identical tasks: `SkillInjector.ab_test_skills`)
+- [x] Deterministic simulated comparison helper
+- [ ] Execute real skill variants on controlled identical tasks
 
 #### 4.4 ESRA Feedback Loop in Hermes Config
-- [x] Let evolved skills auto-update Hermes system prompt (`ESRAFeedbackLoop.update_system_prompt`)
-- [x] Propagate value changes to agent instructions (`ESRAFeedbackLoop.propagate_values_to_instructions`)
+- [x] Write local proposed prompt and value-instruction artifacts
+- [ ] Verify that Hermes reviews and applies those artifacts
 - [x] Document decision points in Hermes reasoning chain (`ESRAFeedbackLoop.document_decision_point`)
 
 ---
 
-## Phase 5: Value-Driven Experiments ✓ (COMPLETE)
+## Phase 5: Value-Driven Experiment Foundation ◐ (PARTIAL)
 
 ### Objectives
-- Launch deliberate, audited improvement experiments
+- Support deliberate, audited local experiment records
 - Align all evolution with core values
 - Build institutional knowledge of what works
 - Publish methodology for other agents/systems
@@ -180,19 +197,19 @@
 - [x] Results analysis and integration
 
 #### 5.2 Value-Aligned Improvement Cycles
-- [x] Monthly themed cycles (e.g., "improving reasoning clarity")
-- [x] value-clarifier sign-off before each cycle
-- [x] Quarterly comprehensive value audit
+- [ ] Run and publish evidence from monthly themed cycles
+- [x] Value-alignment gates are represented in skills and experiment tooling
+- [ ] Run and publish quarterly value audits
 
 #### 5.3 Antifragility Experiments
 - [x] Deliberately introduce stressors
 - [x] Measure resilience & adaptation
-- [x] Publish findings for research
+- [ ] Publish anonymized findings from real experiments
 
 #### 5.4 Meta-Skill Improvements
 - [x] Use ESRA to improve ESRA itself (recursive)
-- [x] Test on sandbox Hermes before production
-- [x] Publish breakthrough meta-techniques
+- [ ] Test end to end on a sandbox Hermes host before production
+- [ ] Publish reproducible methods and negative results
 
 ---
 

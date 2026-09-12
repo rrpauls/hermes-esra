@@ -1,6 +1,8 @@
 # AGENTS.md — ESRA Integration for Hermes
 
-> **Goal:** Make Hermes self-development systematic, value-aligned, observable, and compounding by connecting its native learning loop with the Evolutionary Self-Recursive Architecture (ESRA) meta-layer.
+> **Goal:** Make Hermes improvement work systematic, value-aligned, observable,
+> and evidence-driven through the Evolutionary Self-Recursive Architecture
+> (ESRA) meta-layer.
 
 **Official architecture name:** ESRA — Evolutionary Self-Recursive Architecture  
 **Specification repository:** https://github.com/rrpauls/esra  
@@ -10,10 +12,13 @@
 
 ## Core Rule
 
-**After any complex task**, skill creation, or significant improvement — **always run** `hermes-evolution-orchestrator`  
-(or explicitly say: `orchestrate evolution` / `run full ESRA cycle`).
+After a major architecture or skill change, repeated failure, or an explicit
+full-cycle request, evaluate whether to run **one bounded**
+`hermes-evolution-orchestrator` review. Routine successful work should not
+trigger a full cycle.
 
-This turns ad-hoc improvements into a deliberate, auditable, and self-improving evolutionary process.
+A recommendation from `evolution_hook.py` does not execute a cycle. The
+caller must explicitly activate the orchestrator.
 
 ---
 
@@ -29,7 +34,8 @@ $HERMES_HOME/                         # default: ~/.hermes
 │   ├── hermes-evolution-orchestrator/
 │   └── …
 └── esra/                             # ESRA runtime package (not a skill)
-    ├── manifest.json                 # machine-readable paths
+    ├── manifest.json                 # machine-readable paths and protocol version
+    ├── conformance.json              # evidence-backed capability declaration
     └── tools/                        # Python CLIs — use these paths
 ```
 
@@ -38,6 +44,7 @@ $HERMES_HOME/                         # default: ~/.hermes
 | Meta-skills | `~/.hermes/skills/esra/` | Skills / slash commands |
 | Runtime tools | `~/.hermes/esra/tools/` | Via `esra-runtime` skill + this file |
 | Manifest | `~/.hermes/esra/manifest.json` | Read when paths are unclear |
+| Conformance | `~/.hermes/esra/conformance.json` | Check supported protocol and capability maturity |
 
 Override roots with `$HERMES_HOME` and/or `$ESRA_HOME` if set.
 
@@ -72,13 +79,15 @@ perform evolutionary audit of this task
 
 ### Smart Triggering via `evolution_hook.py`
 
-The helper at `~/.hermes/esra/tools/evolution_hook.py` analyzes task context and evolution history to decide when to launch the orchestrator.
+The helper at `~/.hermes/esra/tools/evolution_hook.py` analyzes supplied task
+context and local evolution history and recommends whether the caller should
+launch the orchestrator.
 
 **Capabilities:**
 - Considers task complexity, new skill creation, and result confidence
 - Includes rate limiting
 - Analyzes historical patterns
-- Can serve as a reference for future native Hermes integration
+- Produces a recommendation and prompt; it is not a native Hermes event hook
 
 **Usage:**
 ```bash
@@ -96,7 +105,8 @@ For any uncertainty or important decision, run `ooda-framework` (optionally with
 
 ## Periodic Audit
 
-Every **5–10 significant cycles** or after major changes, explicitly run:
+Every **5–10 recorded significant cycles**, or after an anomaly, explicitly
+run the audit. If cycle history is unavailable, report cadence as unknown:
 
 ```text
 Run loop-auditor to audit the current evolutionary cycle
@@ -158,7 +168,8 @@ This installs:
 1. Meta-skills → `~/.hermes/skills/esra/` (including `esra-runtime`)
 2. Tools package → `~/.hermes/esra/tools/`
 3. Manifest → `~/.hermes/esra/manifest.json`
-4. This file → `~/.hermes/AGENTS.md`
+4. Conformance declaration → `~/.hermes/esra/conformance.json`
+5. This file → `~/.hermes/AGENTS.md`
 
 Respects `$HERMES_HOME` / `$ESRA_HOME` when set.
 
