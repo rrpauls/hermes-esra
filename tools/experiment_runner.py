@@ -629,6 +629,8 @@ def main():
 
             if results.get("error"):
                 print(f"❌ {CLR_RED}Experiment execution BLOCKED: {results['error']}{CLR_RESET}", file=sys.stderr)
+                if "sign-off FAILED" in results["error"]:
+                    print(f"{CLR_YELLOW}💡 Tip: Recreate the experiment with a stronger justification and a score >= 0.70.{CLR_RESET}", file=sys.stderr)
                 sys.exit(1)
 
             if results.get("aborted"):
