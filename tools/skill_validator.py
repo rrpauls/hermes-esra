@@ -249,6 +249,11 @@ def stage_and_promote(skills_src: Path, staging_dir: Path, prod_dir: Path, verbo
     staging_dir = Path(staging_dir)
     prod_dir = Path(prod_dir)
 
+    if not skills_src.exists() or not skills_src.is_dir():
+        print(f"❌ {CLR_RED}Error: Skills source directory '{skills_src}' does not exist or is not a directory.{CLR_RESET}", file=sys.stderr)
+        print(f"{CLR_YELLOW}💡 Tip: Verify the --skills-dir path is correct and points to an existing directory.{CLR_RESET}", file=sys.stderr)
+        return False
+
     # Refuse symlink trees (prevents copy-follow into sensitive files)
     if assert_no_symlinks_in_tree is not None:
         assert_no_symlinks_in_tree(skills_src)
