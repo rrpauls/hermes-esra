@@ -28,10 +28,11 @@ class BaselineMetrics:
             secure_mkdir(self.snapshots_dir, 0o700)
         else:
             self.snapshots_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-            try:
-                os.chmod(self.snapshots_dir, 0o700)
-            except OSError:
-                pass
+            if not self.snapshots_dir.is_symlink():
+                try:
+                    os.chmod(self.snapshots_dir, 0o700)
+                except OSError:
+                    pass
 
     def define_kpis(self):
         """

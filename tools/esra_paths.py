@@ -68,10 +68,11 @@ def secure_mkdir(path: Path, mode: int = 0o700) -> Path:
     """
     path = Path(path)
     path.mkdir(parents=True, exist_ok=True, mode=mode)
-    try:
-        os.chmod(path, mode)
-    except OSError:
-        pass
+    if not path.is_symlink():
+        try:
+            os.chmod(path, mode)
+        except OSError:
+            pass
     return path
 
 
