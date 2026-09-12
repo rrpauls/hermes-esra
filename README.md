@@ -151,6 +151,7 @@ Installed under `~/.hermes/skills/esra/`:
 |------|---------|
 | `evolution_hook.py` | Smart trigger: complexity, new skills, confidence, rate limits |
 | `esra_logger.py` | Structured JSON logs under `~/.hermes/evolution-logs/` |
+| `esra_export.py` | Privacy-filtered ESRA 1.2 `cycle-event` JSONL export |
 | `evolution_dashboard.py` | CLI view of cycle metrics and recent history |
 | `baseline_metrics.py` | KPI tracking and snapshots |
 | `skill_validator.py` | Frontmatter, branding, dependency DAG, stage/promote |
@@ -163,6 +164,13 @@ Capability maturity and its evidence are declared in
 [`esra-conformance.json`](esra-conformance.json). A declaration marked
 `simulated` or `planned` is intentionally not presented as host-native
 behavior.
+
+Export existing history and cycle logs without rewriting them:
+
+```bash
+python ~/.hermes/esra/tools/esra_export.py \
+  --data-dir ~/.hermes --output /tmp/esra-events.jsonl
+```
 
 Tools are **not** Hermes built-in toolsets. They are a package under Hermes home; Hermes finds them through `esra-runtime` + `AGENTS.md` + `manifest.json`.
 
@@ -241,4 +249,4 @@ Hermes Agent and its logo are associated with [Nous Research's Hermes Agent](htt
 ---
 
 **Status:** Validated integration toolkit; host-native automation remains
-experimental · **Version:** 1.2 · **License:** [Apache-2.0](LICENSE)
+experimental · **Version:** 1.3 · **License:** [Apache-2.0](LICENSE)

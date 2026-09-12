@@ -195,6 +195,6 @@ The pure conceptual and technical description of the architecture (principles, 8
 
 ---
 
-**Version:** 1.2  
+**Version:** 1.3
 **Date:** 28 July 2026  
 **Compatible with:** Hermes Agent + ESRA (Evolutionary Self-Recursive Architecture)

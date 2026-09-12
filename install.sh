@@ -126,7 +126,7 @@ TOOLS_JSON="${TOOLS_JSON}]"
 cat > "$MANIFEST_DEST" <<EOF
 {
   "name": "hermes-esra",
-  "version": "1.2",
+  "version": "1.3",
   "protocol_version": "1.2",
   "installed_at": "$INSTALLED_AT",
   "hermes_home": "$HERMES_HOME",

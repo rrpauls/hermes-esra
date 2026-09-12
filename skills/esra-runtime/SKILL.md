@@ -1,6 +1,6 @@
 ---
 name: esra-runtime
-description: Activate esra-runtime when locating, explaining, or running ESRA Python tools (evolution_hook, skill_validator, evolution_dashboard, experiment_runner, hermes_integration, baseline_metrics, esra_logger, human_oversight). Documents the installed package path under Hermes home. Triggered by ESRA tools, where are ESRA tools, evolution_hook path, run ESRA tool, esra-runtime or similar.
+description: Activate esra-runtime when locating, explaining, or running ESRA Python tools (evolution_hook, skill_validator, evolution_dashboard, experiment_runner, esra_export, hermes_integration, baseline_metrics, esra_logger, human_oversight). Documents the installed package path under Hermes home. Triggered by ESRA tools, where are ESRA tools, evolution_hook path, run ESRA tool, esra-runtime or similar.
 ---
 
 # ESRA Runtime
@@ -26,6 +26,7 @@ $HERMES_HOME/                    # default: ~/.hermes
         ├── hermes_integration.py
         ├── baseline_metrics.py
         ├── esra_logger.py
+        ├── esra_export.py
         ├── human_oversight.py
         └── esra_paths.py
 ```
@@ -50,6 +51,7 @@ python ~/.hermes/esra/tools/skill_validator.py --verbose --skills-dir ~/.hermes/
 python ~/.hermes/esra/tools/evolution_dashboard.py
 python ~/.hermes/esra/tools/baseline_metrics.py
 python ~/.hermes/esra/tools/experiment_runner.py list
+python ~/.hermes/esra/tools/esra_export.py --data-dir ~/.hermes --output /tmp/esra-events.jsonl
 ```
 
 If `$HERMES_HOME` is set, substitute it for `~/.hermes`.  
@@ -66,6 +68,7 @@ If `$ESRA_HOME` is set, tools are at `$ESRA_HOME/tools/`.
 | `experiment_runner.py` | Canary / staged / A/B / stress experiments |
 | `hermes_integration.py` | Post-task hooks, skill injection, config feedback |
 | `esra_logger.py` | Structured cycle logging API |
+| `esra_export.py` | Export allowlisted ESRA 1.2 `cycle-event` JSONL |
 | `human_oversight.py` | Issues/PRs and `evolve/skill-name-vN` branches |
 | `esra_paths.py` | Shared path resolution (importable) |
 

@@ -2,7 +2,8 @@
 
 **Goal:** Establish Hermes as a self-improving agent through systematic integration of the Evolutionary Self-Recursive Architecture (ESRA).
 
-**Current Status:** v1.2 validated integration toolkit; native Hermes
+**Current Status:** v1.3 validated integration toolkit with portable ESRA 1.2
+event export; native Hermes
 automation and outcome evidence remain incomplete.
 **Last Updated:** 12 September 2026
 
@@ -363,6 +364,6 @@ To help advance this roadmap:
 
 ---
 
-**Roadmap Version:** 1.2
+**Roadmap Version:** 1.3
 **Next Review:** Q3 2026
 **Maintained by:** rrpauls + Contributors
