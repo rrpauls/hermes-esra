@@ -14,6 +14,7 @@
 
 <p align="center">
   <a href="https://github.com/rrpauls/esra">ESRA specification</a> ·
+  <a href="https://github.com/rrpauls/esra-agents">Universal implementation</a> ·
   <a href="https://github.com/rrpauls/chatgpt-esra">OpenAI implementation</a> ·
   <a href="https://github.com/rrpauls/claude-esra">Claude implementation</a> ·
   <a href="AGENTS.md">AGENTS.md</a> ·
@@ -23,6 +24,10 @@
 </p>
 
 ---
+
+> **Migration status:** the canonical portable skills and shared runtime now live in
+> [`esra-agents`](https://github.com/rrpauls/esra-agents). This repository remains
+> available for the existing Hermes-specific release during the transition.
 
 ## What this is
 
