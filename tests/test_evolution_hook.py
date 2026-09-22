@@ -57,9 +57,42 @@ def test_hook_rate_limiting_and_history():
         ctx_simple = {"summary": "simple task", "complexity": 3, "confidence": 0.9}
         assert hook.should_trigger_orchestrator(ctx_simple) is False
 
-        # But explicit requests or new skill creation still override rate limit!
+        # The limiter must be evaluated before positive heuristics.
+        assert hook.should_trigger_orchestrator({"complexity": 8}) is False
+        assert hook.should_trigger_orchestrator({"keywords": ["esra"]}) is False
+
+        # A copied explicit flag cannot bypass the limiter.
         ctx_explicit = {"explicit_evolution_request": True}
-        assert hook.should_trigger_orchestrator(ctx_explicit) is True
+        assert hook.should_trigger_orchestrator(ctx_explicit) is False
+
+        # A genuinely new, user-initiated root task may bypass the global rate
+        # limit, but never the non-recursion guard.
+        ctx_user = {"explicit_evolution_request": True, "user_initiated": True, "root_task_id": "new-root"}
+        assert hook.should_trigger_orchestrator(ctx_user) is True
+
+
+def test_hook_blocks_recursive_entry_and_second_review_for_root():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        hook = EvolutionHook(hermes_home=Path(tmpdir))
+        assert hook.should_trigger_orchestrator({
+            "origin": "esra", "explicit_evolution_request": True, "complexity": 10,
+        }) is False
+        assert hook.should_trigger_orchestrator({"cycle_depth": 1, "complexity": 10}) is False
+
+        first = hook.trigger_orchestrator({"root_task_id": "root-1", "complexity": 8})
+        assert first["trigger_decision"] is True
+        assert hook.should_trigger_orchestrator({"root_task_id": "root-1", "complexity": 8}) is False
+
+
+def test_force_cycle_cannot_bypass_recursive_entry_guard():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        hook = EvolutionHook(hermes_home=Path(tmpdir))
+        result = hook.trigger_force_cycle({"origin": "esra", "cycle_depth": 1})
+        assert result["trigger_decision"] is False
+
+        hook.trigger_orchestrator({"root_task_id": "root-1", "complexity": 8})
+        result = hook.trigger_force_cycle({"root_task_id": "root-1"})
+        assert result["trigger_decision"] is False
 
 def test_hook_pattern_analysis():
     with tempfile.TemporaryDirectory() as tmpdir:

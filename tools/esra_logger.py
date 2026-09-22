@@ -56,7 +56,11 @@ class ESRALogger:
                 "new_skills_created": outputs.get("new_skills_created", []),
                 "improvements_applied": outputs.get("improvements_applied", []),
                 "value_changes": outputs.get("value_changes", []),
-                "success": outputs.get("success", True),
+                # Unknown completion is never promoted to success.
+                "success": outputs.get("success") is True,
+                "completion_state": outputs.get("completion_state", "inconclusive")
+                if outputs.get("success") is not True
+                else outputs.get("completion_state", "success"),
                 "anomalies": outputs.get("anomalies", []),
                 "crisis_interventions": outputs.get("crisis_interventions", [])
             },

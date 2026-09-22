@@ -47,6 +47,43 @@ def test_hermes_plugin_post_task_hook():
         res = interface.post_task_hook(task_context, result, metrics)
         assert "trigger_decision" in res
         assert res["trigger_decision"] is True
+        assert res["completion_state"] == "success"
+
+
+def test_post_task_completion_is_fail_closed_and_duration_is_not_failure():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        interface = HermesPluginInterface(hermes_home=Path(tmpdir))
+
+        unknown = interface.post_task_hook({"summary": "unknown"}, {}, {"duration_seconds": 1})
+        assert unknown["completion_state"] == "inconclusive"
+
+        slow_success = interface.post_task_hook(
+            {"summary": "slow provider call", "complexity": 1},
+            {"success": True},
+            {"duration_seconds": 120, "error_count": 0},
+        )
+        assert slow_success["completion_state"] == "success"
+        assert slow_success["trigger_decision"] is False
+
+
+def test_post_task_requires_declared_artifact_to_exist():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        interface = HermesPluginInterface(hermes_home=Path(tmpdir))
+        result = interface.post_task_hook(
+            {"summary": "generate image"},
+            {"success": True, "artifact_required": True, "artifacts": [str(Path(tmpdir) / "missing.png")]},
+            {},
+        )
+        assert result["completion_state"] == "empty"
+
+        invalid = Path(tmpdir) / "invalid.png"
+        invalid.write_text("not an image", encoding="utf-8")
+        result = interface.post_task_hook(
+            {"summary": "generate image"},
+            {"completion_state": "success", "success": True, "artifacts": [str(invalid)]},
+            {},
+        )
+        assert result["completion_state"] == "empty"
 
 
 def test_automatic_evolution_trigger_aggressiveness():

@@ -83,6 +83,13 @@ The helper at `~/.hermes/esra/tools/evolution_hook.py` analyzes supplied task
 context and local evolution history and recommends whether the caller should
 launch the orchestrator.
 
+Callers that preserve lifecycle state must pass `origin`, `root_task_id`, and
+`cycle_depth`. `origin=esra`, any `cycle_depth > 0`, or a second recommendation
+for the same `root_task_id` is rejected before all trigger heuristics, including
+forced or explicit requests. Post-task results are fail-closed: only explicit
+`success: true` is success, and declared artifact paths must exist, be non-empty,
+and have a valid image envelope when applicable.
+
 **Capabilities:**
 - Considers task complexity, new skill creation, and result confidence
 - Includes rate limiting

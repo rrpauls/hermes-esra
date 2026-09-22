@@ -48,6 +48,76 @@ except ImportError:
     from evolution_hook import EvolutionHook
 
 
+COMPLETION_STATES = {"success", "failure", "timeout", "cancelled", "empty", "inconclusive"}
+IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp"}
+
+
+def _valid_image_envelope(path: Path, media_type: str = "") -> bool:
+    try:
+        with path.open("rb") as handle:
+            head = handle.read(16)
+            size = path.stat().st_size
+            handle.seek(max(0, size - 12))
+            tail = handle.read(12)
+    except OSError:
+        return False
+    suffix = path.suffix.lower()
+    if suffix not in IMAGE_SUFFIXES and media_type.startswith("image/"):
+        suffix = {
+            "image/png": ".png", "image/jpeg": ".jpg", "image/gif": ".gif",
+            "image/webp": ".webp", "image/bmp": ".bmp",
+        }.get(media_type.lower(), "")
+        if not suffix:
+            return False
+    if suffix == ".png":
+        return head.startswith(b"\x89PNG\r\n\x1a\n") and tail.endswith(b"IEND\xaeB`\x82")
+    if suffix in {".jpg", ".jpeg"}:
+        return head.startswith(b"\xff\xd8") and tail.endswith(b"\xff\xd9")
+    if suffix == ".gif":
+        return head[:6] in {b"GIF87a", b"GIF89a"} and tail.endswith(b";")
+    if suffix == ".webp":
+        return size >= 12 and head[:4] == b"RIFF" and head[8:12] == b"WEBP"
+    if suffix == ".bmp":
+        return size >= 26 and head[:2] == b"BM"
+    return True
+
+
+def _completion_state(result: Dict[str, Any]) -> str:
+    """Map a host result to a fail-closed completion state."""
+    declared = str(result.get("completion_state", "")).strip().lower()
+    if declared in COMPLETION_STATES - {"success"}:
+        return declared
+    if result.get("timed_out") is True:
+        return "timeout"
+    if result.get("cancelled") is True:
+        return "cancelled"
+    if result.get("success") is False:
+        return "failure"
+    if result.get("success") is not True:
+        return "inconclusive"
+
+    artifacts = result.get("artifacts")
+    if result.get("artifact_required") is True and not artifacts:
+        return "empty"
+    if artifacts is not None:
+        if not isinstance(artifacts, list) or not artifacts:
+            return "empty"
+        for artifact in artifacts:
+            path_value = artifact.get("path") if isinstance(artifact, dict) else artifact
+            media_type = str(artifact.get("media_type", "")).lower() if isinstance(artifact, dict) else ""
+            if not isinstance(path_value, str) or not path_value:
+                return "empty"
+            path = Path(path_value).expanduser()
+            try:
+                if not path.is_file() or path.stat().st_size <= 0:
+                    return "empty"
+                if (path.suffix.lower() in IMAGE_SUFFIXES or media_type.startswith("image/")) and not _valid_image_envelope(path, media_type):
+                    return "empty"
+            except OSError:
+                return "empty"
+    return "success"
+
+
 def _safe_component(name: str, label: str = "skill_name") -> str:
     if require_safe_path_component is not None:
         return require_safe_path_component(name, label=label)
@@ -90,6 +160,7 @@ class HermesPluginInterface:
             }
 
         hook = EvolutionHook(hermes_home=self.hermes_home)
+        completion_state = _completion_state(result)
 
         # Enrich task context with result & metrics details
         enriched_context = task_context.copy()
@@ -106,11 +177,11 @@ class HermesPluginInterface:
         if "struggled" not in enriched_context:
             enriched_context["struggled"] = (
                 metrics.get("error_count", 0) > 0 or
-                metrics.get("duration_seconds", 0) > 10.0 or
-                result.get("success", True) is False
+                completion_state != "success"
             )
 
         trigger_res = hook.trigger_orchestrator(enriched_context)
+        trigger_res["completion_state"] = completion_state
         return trigger_res
 
     def query_hermes_state(self) -> Dict[str, Any]:

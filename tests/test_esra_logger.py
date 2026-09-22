@@ -56,3 +56,12 @@ def test_logger_retention_policy():
 
         assert not old_file.exists(), "Old log file should have been deleted by retention policy"
         assert new_file.exists(), "New log file should not be deleted"
+
+
+def test_logger_does_not_default_missing_success_to_true():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        logger = ESRALogger(log_dir=tmpdir)
+        filepath = logger.log_cycle({}, {}, {}, {})
+        data = json.loads(Path(filepath).read_text(encoding="utf-8"))
+        assert data["outputs"]["success"] is False
+        assert data["outputs"]["completion_state"] == "inconclusive"

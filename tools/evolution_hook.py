@@ -140,6 +140,30 @@ class EvolutionHook:
         - Multi-step work
         - Rate limiting via recent history
         """
+        # These are hard state-machine boundaries, not LLM heuristics.  They
+        # must run before every trigger reason, including an explicit request
+        # copied into an ESRA-generated task.
+        origin = str(task_context.get("origin", "user")).strip().lower()
+        try:
+            cycle_depth = int(task_context.get("cycle_depth", 0))
+        except (TypeError, ValueError):
+            cycle_depth = 1  # malformed control state fails closed
+        if (
+            origin == "esra"
+            or cycle_depth > 0
+            or task_context.get("in_esra_review") is True
+            or task_context.get("esra_generated") is True
+        ):
+            return False
+
+        root_task_id = str(task_context.get("root_task_id", "")).strip()
+        if root_task_id and any(
+            event.get("triggered") is True
+            and str(event.get("task_context", {}).get("root_task_id", "")) == root_task_id
+            for event in self.load_history(limit=50)
+        ):
+            return False
+
         complexity = task_context.get("complexity", 0)
         new_skill_created = task_context.get("new_skill_created", False)
         explicit_request = task_context.get("explicit_evolution_request", False)
@@ -154,10 +178,16 @@ class EvolutionHook:
             "meta", "antifragile", "loop-auditor"
         }
 
-        # Rate limiting
+        # Rate limiting is evaluated before semantic trigger reasons. A new,
+        # explicitly user-initiated root task may bypass only this global
+        # limiter; it can never bypass the recursion/root-task guards above.
         recent_history = self.load_history(limit=5)
         recent_triggers = [e for e in recent_history if e.get("triggered", False)]
         triggered_recently = len(recent_triggers) >= 3
+        user_override = explicit_request and task_context.get("user_initiated") is True
+
+        if triggered_recently and not user_override:
+            return False
 
         if explicit_request:
             return True
@@ -171,9 +201,6 @@ class EvolutionHook:
             return True
         if multi_step or struggled:
             return True
-        if triggered_recently:
-            return False
-
         return False
 
     def build_orchestrator_prompt(self, task_context: Dict[str, Any]) -> str:
@@ -235,6 +262,37 @@ Save important insights to persistent memory.
             "explicit_evolution_request": True,
         }
         ctx["explicit_evolution_request"] = True
+        ctx.setdefault("user_initiated", task_context is None)
+
+        # "Force" bypasses heuristics, not the non-recursion invariant.
+        origin = str(ctx.get("origin", "user")).strip().lower()
+        try:
+            cycle_depth = int(ctx.get("cycle_depth", 0))
+        except (TypeError, ValueError):
+            cycle_depth = 1
+        root_task_id = str(ctx.get("root_task_id", "")).strip()
+        root_already_reviewed = bool(root_task_id) and any(
+            event.get("triggered") is True
+            and str(event.get("task_context", {}).get("root_task_id", "")) == root_task_id
+            for event in self.load_history(limit=50)
+        )
+        if (
+            origin == "esra"
+            or cycle_depth > 0
+            or ctx.get("in_esra_review") is True
+            or ctx.get("esra_generated") is True
+            or root_already_reviewed
+        ):
+            result = {
+                "timestamp": datetime.now().isoformat(),
+                "trigger_decision": False,
+                "forced": True,
+                "task_context": ctx,
+                "triggered": False,
+                "recommended_action": "Orchestration suppressed: recursive or already-reviewed root",
+            }
+            self.record_evolution_event(result)
+            return result
 
         prompt = self.build_orchestrator_prompt(ctx)
         result = {
