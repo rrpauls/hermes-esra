@@ -2,9 +2,9 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/logo.svg">
-    <source media="(prefers-color-scheme: light)" srcset="assets/logo-inverse.svg">
-    <img src="assets/logo-inverse.svg" alt="Evolutionary Self-Recursive Architecture for Hermes Agent logo" width="240">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-inverse.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/logo.svg">
+    <img src="assets/logo.svg" alt="Evolutionary Self-Recursive Architecture for Hermes Agent logo" width="240">
   </picture>
 </p>
 
