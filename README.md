@@ -1,7 +1,7 @@
 # Evolutionary Self-Recursive Architecture for Hermes Agent
 
 <p align="center">
-  <img src="assets/logo-hermes-agent.png" alt="Evolutionary Self-Recursive Architecture for Hermes Agent logo" width="240"/>
+  <img src="assets/logo-inverse.svg" alt="Evolutionary Self-Recursive Architecture for Hermes Agent logo" width="240"/>
 </p>
 
 <p align="center">
@@ -216,7 +216,7 @@ hermes-esra/
 ├── AGENTS.md              # Triggers, layout, and tool paths for Hermes
 ├── ROADMAP.md             # Evidence-based maturity and future work
 ├── install.sh             # Install skills + tools package into $HERMES_HOME
-├── assets/logo-hermes-agent.png
+├── assets/logo-inverse.svg
 ├── skills/                # 15 ESRA skills (incl. esra-runtime)
 ├── tools/                 # Runtime package (copied to ~/.hermes/esra/tools/)
 └── tests/                 # Unit, integration, scenario, and stress tests
