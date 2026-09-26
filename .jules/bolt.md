@@ -16,3 +16,6 @@
 ## 2026-07-28 - Optimize Batch JSON Processing Memory Usage
 **Learning:** During batch processing of many JSON log files, appending loaded JSON objects to a list causes peak memory to scale linearly (O(N)) with the number of files. This can lead to memory exhaustion when analyzing large datasets. By iteratively streaming the files and calculating aggregate metrics inline within the generator/loop, memory consumption remains constant (O(1)).
 **Action:** When calculating aggregated metrics from multiple files, stream the processing inline within the generator or loop instead of materializing all data objects into memory first. Ensure inline processing tracks required counters effectively. Add the `# ⚡ BOLT OPTIMIZATION: Process log files iteratively to avoid O(N) memory allocation` comment.
+## 2026-07-29 - Avoid micro-optimizations on lists
+**Learning:** Attempted to convert `list()` materializations to generators in test scripts containing around 60 files. The performance review rejected this as a pointless micro-optimization with zero measurable benefit that only hurt readability.
+**Action:** Stop blindly applying generator patterns unless the underlying dataset size is proven to be huge. When I cannot find a measurable performance bottleneck, stop and do NOT create a PR.
