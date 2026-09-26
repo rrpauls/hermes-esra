@@ -16,3 +16,6 @@
 ## 2026-07-28 - Optimize Batch JSON Processing Memory Usage
 **Learning:** During batch processing of many JSON log files, appending loaded JSON objects to a list causes peak memory to scale linearly (O(N)) with the number of files. This can lead to memory exhaustion when analyzing large datasets. By iteratively streaming the files and calculating aggregate metrics inline within the generator/loop, memory consumption remains constant (O(1)).
 **Action:** When calculating aggregated metrics from multiple files, stream the processing inline within the generator or loop instead of materializing all data objects into memory first. Ensure inline processing tracks required counters effectively. Add the `# ⚡ BOLT OPTIMIZATION: Process log files iteratively to avoid O(N) memory allocation` comment.
+## 2026-07-30 - Generator-based log loading rejected
+**Learning:** Converting list-based log loading to generators in `EvolutionDashboard` introduces unnecessary complexity and breaks public interfaces (like `calculate_metrics` expecting a list) without providing measurable benefits for typical evolution log sizes.
+**Action:** When considering memory optimizations for log aggregation or dashboarding, verify if the typical data volume justifies the complexity of streaming/generators, and avoid changing public interfaces unless absolutely necessary for massive datasets.
