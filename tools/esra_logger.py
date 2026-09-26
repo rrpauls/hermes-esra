@@ -29,7 +29,8 @@ class ESRALogger:
         else:
             self.log_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
             try:
-                os.chmod(self.log_dir, 0o700)
+                if not self.log_dir.is_symlink():
+                    os.chmod(self.log_dir, 0o700)
             except OSError:
                 pass
         self.clean_old_logs()
